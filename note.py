@@ -46,8 +46,6 @@ def print_expr(expr):
         return str(expr)
     if isinstance(expr, str):
         return expr
-    if not isinstance(expr, List):
-        return str(expr)    
     if expr[0] in INLINE:
         return print_expr(expr[1]) + " " + expr[0] + " " + print_expr(expr[2])
     if expr[0] == 'if':
