@@ -4,6 +4,9 @@ Symbol = str          # A Lisp Symbol is implemented as a Python str
 List   = list         # A Lisp List is implemented as a Python list
 Number = (int, float) # A Lisp Number is implemented as a Python int or float
 
+# The inline function I deal with
+INLINE = ('+', '-', '/', '=', '===')
+
 def parse(program):
     "Read a Scheme expression from a string."
     return read_from_tokens(tokenize(program))
@@ -43,7 +46,9 @@ def print_expr(expr):
         return str(expr)
     if isinstance(expr, str):
         return expr
-    if expr[0] in ('+', '-','/','==='):          # as in (+,-,/,&&,=, etc)
+    if not isinstance(expr, List):
+        return str(expr)    
+    if expr[0] in INLINE:
         return print_expr(expr[1]) + " " + expr[0] + " " + print_expr(expr[2])
     if expr[0] == 'if':
         try:
@@ -51,7 +56,34 @@ def print_expr(expr):
         except:
             return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+"}" # if + test + then
     if expr[0] == 'function':
-        return expr[0] + '(' + print_expr(expr[1]) + ') {' + print_expr(expr[2]) + '}'
+        return expr[0] + '(' + stringify(expr[1]) + ') {' + print_expr(expr[2]) + '}'
     if expr[0] == 'define':
         return 'var ' + print_expr(expr[1]) + ' = ' + print_expr(expr[2])
-    return str(expr[0])
+    s = "" + expr[0] + '('
+    foo = False
+    for i in expr[1:]:
+        foo = True
+        s += print_expr(i) + ', '
+    if foo:
+        a = s[:-2] + ")"
+    else:
+        a = s + ')'
+    return a
+
+def stringify(lst):
+    s = ""
+    foo = False
+    for i in lst:
+        foo = True
+        s += i + ","
+    if foo:
+        s = s[:-1]
+    return s
+    
+def add_return(ast):
+    pass
+    
+def scm2js(string):
+    ast = parse(string)
+    # ast = add_return(ast)
+    print(print_expr(ast))

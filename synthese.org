@@ -1,0 +1,20 @@
+* Compiler Scm -> JS
+
+** TODO Add return statements
+
+** DONE Fix up function call
+
+** TODO Split up the function for handling
+   As in, one for the function and another for the args.
+
+** TODO Make it more pretty
+   Puttin \n and indenting correctly as much as possible
+
+** TODO Clean up the parser
+
+** TODO Make changing the code easier
+   As in lambda -> function and = -> ===
+
+** TODO Clean up the switch statement
+   Metaprogramming -> globals()["foo"]()
+   
