@@ -40,11 +40,10 @@ def atom(token):
             return Symbol(token)
 
 def my_if(expr):
-    if expr[0] == 'if':
-        try:
-            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "} " + "else { " + print_expr(expr[3]) + "}"
-        except:
-            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "}"
+    try:
+        return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "} " + "else { " + print_expr(expr[3]) + "}"
+    except:
+        return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "}"
 
 def my_function(expr):
     return expr[0] + '(' + stringify(expr[1]) + ') {' + print_expr(expr[2]) + '}'
