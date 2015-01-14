@@ -5,7 +5,7 @@ List   = list         # A Lisp List is implemented as a Python list
 Number = (int, float) # A Lisp Number is implemented as a Python int or float
 
 # The inline function I deal with
-INLINE = ('+', '-', '/', '=', '===')
+INLINE = ('*', '+', '-', '/', '=', '===')
 
 def parse(program):
     "Read a Scheme expression from a string."
@@ -52,9 +52,9 @@ def print_expr(expr):
         return print_expr(expr[1]) + " " + expr[0] + " " + print_expr(expr[2])
     if expr[0] == 'if':
         try:
-            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+"} " + "else { " + print_expr(expr[3]) + "}" # if + test + then
+            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "} " + "else { " + print_expr(expr[3]) + "}"
         except:
-            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+"}" # if + test + then
+            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "}"
     if expr[0] == 'function':
         return expr[0] + '(' + stringify(expr[1]) + ') {' + print_expr(expr[2]) + '}'
     if expr[0] == 'define':
@@ -86,4 +86,4 @@ def add_return(ast):
 def scm2js(string):
     ast = parse(string)
     # ast = add_return(ast)
-    print(print_expr(ast))
+    return print_expr(ast)
