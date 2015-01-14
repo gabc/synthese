@@ -39,6 +39,19 @@ def atom(token):
         except ValueError:
             return Symbol(token)
 
+def my_if(expr):
+    if expr[0] == 'if':
+        try:
+            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "} " + "else { " + print_expr(expr[3]) + "}"
+        except:
+            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "}"
+
+def my_function(expr):
+    return expr[0] + '(' + stringify(expr[1]) + ') {' + print_expr(expr[2]) + '}'
+    
+def my_define(expr):
+    return 'var ' + print_expr(expr[1]) + ' = ' + print_expr(expr[2])
+        
 def print_expr(expr):
     if expr == []:
         return ""
@@ -48,15 +61,10 @@ def print_expr(expr):
         return expr
     if expr[0] in INLINE:
         return print_expr(expr[1]) + " " + expr[0] + " " + print_expr(expr[2])
-    if expr[0] == 'if':
-        try:
-            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "} " + "else { " + print_expr(expr[3]) + "}"
-        except:
-            return "if(" + print_expr(expr[1])+") {" + print_expr(expr[2])+ "}"
-    if expr[0] == 'function':
-        return expr[0] + '(' + stringify(expr[1]) + ') {' + print_expr(expr[2]) + '}'
-    if expr[0] == 'define':
-        return 'var ' + print_expr(expr[1]) + ' = ' + print_expr(expr[2])
+    try:
+        return globals()['my_'+expr[0]](expr)
+    except:
+        pass
     s = "" + expr[0] + '('
     foo = False
     for i in expr[1:]:
