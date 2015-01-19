@@ -84,11 +84,29 @@ def stringify(lst):
     if foo:
         s = s[:-1]
     return s
-    
+
+def add_if_return(ast):
+    ast[2] = ['return', ast[2]]
+    try:
+        ast[3] = ['return', ast[3]]
+    except:
+        pass
+    return ast
+
+def add_fn_return(ast):
+    if ast[2][0] == 'if':
+        ast[2] = add_if_return(ast[2])
+    else:
+        ast[2] = ['return', ast[2]]
+    return ast
+
 def add_return(ast):
-    pass
+    if ast[0] == 'define' and ast[2][0] == 'function':
+        ast[2] = add_fn_return(ast[2])
+    return ast
     
 def scm2js(string):
     ast = parse(string)
-    # ast = add_return(ast)
+    # print(ast)
+    ast = add_return(ast)
     return print_expr(ast)
