@@ -1,0 +1,9 @@
+# Definition de l'interface pour les bebites
+
+* L'interface pour les dll.
+	Avoir une liste de fonction que chacun devra implémenter.
+** Une fonction d'entrée
+** Une fonction pour chaque tick
+** Une fonction pour la mort
+** Des fonctions pour avoir acces aux variables.
+	Voir a quel point on est capable d'avoir acces a partir des objets

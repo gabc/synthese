@@ -19,14 +19,7 @@
 		...
 
 
-* L'interface pour les dll.
-	Avoir une liste de fonction que chacun devra implémenter.
 
-** Une fonction d'entrée
-** Une fonction pour chaque tick
-** Une fonction pour la mort
-** Des fonctions pour avoir acces aux variables.
-	Voir a quel point on est capable d'avoir acces a partir des objets
 
 * Les comportements
 ** Vue
@@ -59,11 +52,3 @@
 
 
 * scratch
-	Chaque tick:
-	- Ce qu'on voit.
-	- Gerer les importances.
-		- Si y'a un danger.
-		- Si y'a faim.
-		- etc.
-	- Faire ce qui est le plus important.
-		Selon une probabilité selon les importances.

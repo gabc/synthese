@@ -1,3 +1,5 @@
+# Details de la vue
+
 * Avoir un menu d'introduction
 ** New
 ** Load
