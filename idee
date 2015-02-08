@@ -1,0 +1,69 @@
+* Avoir un framework pour les bebites.
+	Fonctionnant par DLL/.so
+	Avec une interface définie.
+	QDir/QFile
+
+* Data structure
+	Tenir une liste de tout les trucs sur la carte.
+	Passer au travers et caller une fonction (a définir)
+	pour qu'elle aie sont tour.
+	L'avoir publique, pour que le truc puisse voir autour.
+	(Probablement O(n²), ce qui est moche)
+
+	Eg:
+	doStuff():
+		seen = canSee(listOfAllStuff);
+		for t in seen:
+			if t can killme:
+				gtfo
+		...
+
+
+* L'interface pour les dll.
+	Avoir une liste de fonction que chacun devra implémenter.
+
+** Une fonction d'entrée
+** Une fonction pour chaque tick
+** Une fonction pour la mort
+** Des fonctions pour avoir acces aux variables.
+	Voir a quel point on est capable d'avoir acces a partir des objets
+
+* Les comportements
+** Vue
+	Premierement, il est important d'avoir un champ
+	de vision pour chaque bebite.
+** Faim
+	Chaque n tick, la faim descend.
+	Et l'envie de manger monte.
+** Sommeil
+	Voir faim.
+** Déterminer le threat d'un autre.
+	En gros, comme chaque bebite est de son cote.
+	Y'a pas moyen d'avoir un lien direct.
+	Il va falloir faire avec un heuristique.
+
+	Par exemple, avoir une comparaison, avec la taille.
+	La grosseur.
+	La vitesse.
+	etc.
+	Si ça entre dans une certaine mesure, le truc est safe.
+
+** Combat
+** Reproduction
+	
+* Chaine alimentaire
+	Un truc dynamique.
+	Chaque bebite, va apprendre s'il peut manger un autre.
+	Ou pas.
+	Avoir un graphique, montrant les liens.	
+
+
+* scratch
+	Chaque tick:
+	- Ce qu'on voit.
+	- Gerer les importances.
+		- Si y'a un danger.
+		- Si y'a faim.
+		- etc.
+	- Faire ce qui est le plus important.
+		Selon une probabilité selon les importances.
