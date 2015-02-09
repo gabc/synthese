@@ -1,9 +1,40 @@
 # Definition de l'interface pour les bebites
 
 * L'interface pour les dll.
-	Avoir une liste de fonction que chacun devra implémenter.
+	Avoir une liste de fonctions que chacun devra implémenter.
+** Général
+	- bool canSee(QMO *a)
+		Retourne true si:
+		a est dans le champ de vision de this.
+
 ** Une fonction d'entrée
+	Aussi nommé, constructeur.
+
 ** Une fonction pour chaque tick
+** Pour le reproductage
+	- bool canReproduce(void)
+		Retourne true si this est:
+		Dans un état pour se reproduire.
+		S'il a pas eu d'enfant depuis X.
+		S'il a pas trop faim.
+		S'il est pas trop fatigue.
+	- bool inDickRangeOf(QMO *a)
+		Retourne true si:
+		*a est assez proche pour l'accouplement.
+	- bool canReproduceWith(QMO *a)
+		Retourne true si:
+		*a est le meme type que this.
+		Que this canReproduce().
+		Est inDickRangeOf(a).
+		/* Voir si y'a moyen de faire autrement */
+
+	- QMO* reproduitWith(QMO* b)
+		Cree un nouveau kid selon les var
+		de this et b.
+		Le retourne.
+
 ** Une fonction pour la mort
+	Aussi nommé, destructeur.
+
 ** Des fonctions pour avoir acces aux variables.
 	Voir a quel point on est capable d'avoir acces a partir des objets
