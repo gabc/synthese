@@ -1,7 +1,22 @@
+IMPORTANT:
+	VIRTUAL METHODS.
+	FUCKING C++
+
 * Avoir un framework pour les bebites.
 	Fonctionnant par DLL/.so
 	Avec une interface définie.
 	QDir/QFile
+
+* Main loop
+	A chaque tick.
+	
+	Update les bebittes.
+		update(void);
+	Update les stats.
+		Le nombre de chaque bebitte.
+		Les avancements des dna?
+	Update la vue.
+
 
 * Data structure
 	Tenir une liste de tout les trucs sur la carte.
@@ -54,6 +69,20 @@
 * scratch
 
 Probleme a résoudre:
+** Undone
+	Interface.
+	J'expose quoi?
+
+	J'ai une fonction qui crée un nouvel objet.
+	J'ai une méthode pour chaque tour.
+	
+	Je fais comment pour les stats?
+	Je fais comment pour l'historique?
+
+	Chaque type, devrait avoir un historique de ce qu'il s'est passé.
+	Comment y avoir acces?
+
+** Done
 	Comment gerer un nombre arbitraire d'objets différents.
 	Comment etre capable d'avoir des intéractions entre eux.
 	QMetaObject est pas ce que je veux.
@@ -84,3 +113,4 @@ Probleme a résoudre:
 
 		ajouteNouveauTruc(stuff);
 	}
+**
