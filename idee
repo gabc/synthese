@@ -83,6 +83,21 @@ Probleme a résoudre:
 	Comment y avoir acces?
 
 ** Done
+	Chaque classe va avoir une méthode qui va retourner un graph de Qt.
+	Chaque classe va calculer les diff eux-meme.
+	Chaque classe va avoir un static contenant l'historique.
+	Chaque classe contenant un graph.
+	http://doc.qt.io/QtCharts/qtcharts-linechart-example.html
+
+	La méthode retourne un QChartView. Pis c'est chill :D
+	(J'espere que c'est pas une autre demi-feature)
+
+** Done
+	QObject -> VivantThing -> Plante -> Stuff
+			\_> Animal -> Stuff
+	for( auto *i : vivantLst )...
+
+** Done
 	Comment gerer un nombre arbitraire d'objets différents.
 	Comment etre capable d'avoir des intéractions entre eux.
 	QMetaObject est pas ce que je veux.
@@ -90,8 +105,10 @@ Probleme a résoudre:
 	Creation d'un premier stuff.
 	Retirer un stuff.
 
-	Avoir une fonctio nqui te génere un nouvel objets de ce type.
+	Avoir une fonction qui te génere un nouvel objets de ce type.
 	Avec les meta-objets, appeller les bonnes methodes.
+
+	QList.
 
 	Genre:
 	for(i = 0; i < ALLTHING.size(); i++){
