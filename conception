@@ -7,3 +7,46 @@ Le concept de ce simulateur consiste à créer une maquette virtuelle d'un envir
 
 ** Présentation détaillée
 
+*** Travail entre classe
+*** Loadage de Lib
+La lib va implementer une fonction publique.
+'construct_<nom_lib>' Qui permettera de retourner un pointeur sur cet objet.
+Cet objet sera assigné un id, qui permettera de l'identifier.
+Cet id sera fait a partir d'une variable globale, incrémentée.
+Cette variable, publique, sera statique.
+Publique, pour grandement simplifier le traitement de cette donnée.
+Et statique, pour simplifier les créations.
+
+*** Fonctions obligatoires
+Chaque objet devra implementer un certain nombre de méthodes.
+Ces méthodes sont assumées dans le controlleur. D'ou leurs importances.
+
+Ces méthodes sont:
+	qint32 aggressivite(const Animal *chose)
+		Cette méthode permet de déterminer le niveau
+		d'aggressivité entre this et l'animal.
+		Ça permet d'avoir, par exemple, le niveau de danger
+		Que l'animal peut voir.
+		Retourne un nombre entre 0 (completement passif) et
+		100 (this va lui sauter a la gorge au prochain tick.
+	
+	const QChart * statistiques(void)
+		Cette méthode retourne un graphique montrant l'avancement
+		de l'adn de this.
+
+	bool peutVoir(const Animal *chose)
+		Retourne vrai si this peut voir l'Animal.
+
+	bool peutSeReproduire(void)
+		Retourne vrai si this est dans un état ou la reproduction est possible.
+		Par exemple: Une femme humaine qui a pas eu d'enfants depuis 10 mois ou plus.
+
+	bool peutSeReproduireAvec(const Animal *chose)
+		Retourne vrai si this est capable d'avoir une progéniture avec l'Animal.
+		Par exemple, s'ils sont de la meme especes, de sexe différent,
+		si peutSeReproduire est vrai, etc.
+
+	Animal * reproduitAvec(const Animal *chose)
+		Crée un nouvel enfant avec selon les regles de cet animal.
+
+*** Le controlleur
