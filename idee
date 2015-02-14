@@ -33,8 +33,10 @@ IMPORTANT:
 				gtfo
 		...
 
-
-
+	Avoir une liste contenant, l'id de l'objet (compteur de 0 a N).
+	Contenant, l'id. Et le pointeur vers la fonction 'construct'.
+	Quand on fera un nouveau objet ce de type, on callera cette fonction.
+	
 
 * Les comportements
 ** Vue
@@ -81,6 +83,11 @@ Probleme a résoudre:
 
 	Chaque type, devrait avoir un historique de ce qu'il s'est passé.
 	Comment y avoir acces?
+
+	Avoir une variable publique contenant l'id de l'objet.
+	Pour chaque objet.
+	C'est moche, mais va permet de sauver beaucoup de marde.
+	L'avoir statique. Setter lors de la création.
 
 ** Done
 	Chaque classe va avoir une méthode qui va retourner un graph de Qt.
