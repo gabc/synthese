@@ -72,6 +72,9 @@ IMPORTANT:
 
 Probleme a résoudre:
 ** Undone
+	[id, handler, nom, fonction_construct-thingey]
+
+** Undone
 	Interface.
 	J'expose quoi?
 
