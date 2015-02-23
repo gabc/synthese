@@ -131,10 +131,10 @@ Probleme a résoudre:
 	Donc, j'imagine que l'objet a acces a ses méthodes.
 	J'imagine.
 
-	void accouple(QMetaObject *a, QMetaObject *b){
+	void accouple(Vivant *a, Vivant *b){
 		if(!a->canReproduce() && !a->inDickRangeOf(b) && !b->canReproduceWith(a))
 			return NULL;
-		QMetaObject *stuff;
+		Vivant *stuff;
 
 		stuff = a->reproduitWith(b);
 
