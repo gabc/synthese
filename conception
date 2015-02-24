@@ -7,46 +7,32 @@ Le concept de ce simulateur consiste à créer une maquette virtuelle d'un envir
 
 ** Présentation détaillée
 
-*** Travail entre classe
-*** Loadage de Lib
-La lib va implementer une fonction publique.
-'construct_<nom_lib>' Qui permettera de retourner un pointeur sur cet objet.
-Cet objet sera assigné un id, qui permettera de l'identifier.
-Cet id sera fait a partir d'une variable globale, incrémentée.
-Cette variable, publique, sera statique.
-Publique, pour grandement simplifier le traitement de cette donnée.
-Et statique, pour simplifier les créations.
+Ce projet se veut une création d'un `framework' pour la création d'un écosysteme.
+En effet, chacune des créatures sera chargée a partir d'une librairie externe.
+Ceci permettera un dynamisme et une plus grande libértée pour ces créatures.
+Par contre, ce choix oblige un plus grand niveau d'abstraction au niveau du design.
+En effet, comme il sera impossible d'assumer la présence d'aucune autre créature.
 
-*** Fonctions obligatoires
-Chaque objet devra implementer un certain nombre de méthodes.
-Ces méthodes sont assumées dans le controlleur. D'ou leurs importances.
+Par exemple, si dans une simulation il y a des lapins, il est impossible d'assumer la présence de loup ou autre prédateur.
+Et a l'inverse, un loup ne peut pas assumer la présence de proie, que ce soit lapin, ou autre.
+Chaque créature devra donc apprendre ce qu'il peut et/ou pas faire dans l'environement dans lequel il est placé.
 
-Ces méthodes sont:
-	qint32 aggressivite(const Animal *chose)
-		Cette méthode permet de déterminer le niveau
-		d'aggressivité entre this et l'animal.
-		Ça permet d'avoir, par exemple, le niveau de danger
-		Que l'animal peut voir.
-		Retourne un nombre entre 0 (completement passif) et
-		100 (this va lui sauter a la gorge au prochain tick.
-	
-	const QChart * statistiques(void)
-		Cette méthode retourne un graphique montrant l'avancement
-		de l'adn de this.
+Pour aider ce processus. Les créatures sont en deux types et deux cathégories.
+C'est-a-dire:
+Plante ou Animal puis
+Herbivore et Carnivore.
 
-	bool peutVoir(const Animal *chose)
-		Retourne vrai si this peut voir l'Animal.
+Donc un animal carnivore va pouvoir tenter de manger un autre animal.
+Et etc pour les autres.
 
-	bool peutSeReproduire(void)
-		Retourne vrai si this est dans un état ou la reproduction est possible.
-		Par exemple: Une femme humaine qui a pas eu d'enfants depuis 10 mois ou plus.
+De plus, pour aider les créatures a savoir s'ils peuvent manger une autre.
+Chaque créature devra avoir un historique (commun pour toute les instances) contenant des informations.
+Par exemple, avoir une liste contenant l'id des créatures qui ont été manger.
+Avoir une liste contenant l'id des créatures qui l'ont mangé.
 
-	bool peutSeReproduireAvec(const Animal *chose)
-		Retourne vrai si this est capable d'avoir une progéniture avec l'Animal.
-		Par exemple, s'ils sont de la meme especes, de sexe différent,
-		si peutSeReproduire est vrai, etc.
+Ceci pour avoir des données pour prendre de meilleures décisions.
 
-	Animal * reproduitAvec(const Animal *chose)
-		Crée un nouvel enfant avec selon les regles de cet animal.
+De plus, chaque créature aura une méthode qui retournera une estimation de sa `dangerosité'.
+Ceci sera uniquement pour donner une idée. Et ne tienderas pas tout en compte.
+Et donc, cette méthode va permettre aux autres créatures d'avoir une idée de l'animositée de celle-la.
 
-*** Le controlleur
