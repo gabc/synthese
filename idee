@@ -72,6 +72,17 @@ IMPORTANT:
 
 Probleme a résoudre:
 ** Undone
+	Combat.
+	Je fais comment?
+	J'ai une méthode qui fait le combat entre les deux.
+	
+	attaque(Creature *c1, Creature *c2)
+		until(c1->giveUp || c2->giveUp)
+			if(c1->wantToAttack(c2))
+				c1->attacks(c2);
+			if(c2->wantToAttack(c1))
+				c2->attacks(c1);
+** Done
 	[id, handler, nom, fonction_construct-thingey]
 
 ** Undone

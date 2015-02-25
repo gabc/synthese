@@ -60,4 +60,6 @@
     Ceci, dans le but d'avoir des informations sur le type de l'objet.
 
 *** Controlleur
+    Lors de chaque `tick', la méthode d'update de chaque Creature sera appellé.
+    Le temps de chaque `tick' sera variable, selon la vitesse choisie par l'utilisateur.
     
