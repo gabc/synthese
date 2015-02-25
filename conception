@@ -1,38 +1,51 @@
 * Planification
-
+  
 ** Présentation générale
-Ce logiciel permet de simuler un écosystême.
-
-Le concept de ce simulateur consiste à créer une maquette virtuelle d'un environnement réduit et simpliste. Vous devrez créer de petits êtres virtuels ayant des caractéristiques différentes et devant interagir dans l'environnement où ils seront insérés. Principalement, il devra y avoir des proies et des prédateurs interagissant les uns avec les autres. L'équilibre de ce petit écosystème sera important pour que toutes les races puissent vivre ensemble.
-
+   Ce logiciel permet de simuler un écosystême.
+   
+   Le concept de ce simulateur consiste à créer une maquette virtuelle d'un environnement réduit et simpliste. Vous devrez créer de petits êtres virtuels ayant des caractéristiques différentes et devant interagir dans l'environnement où ils seront insérés. Principalement, il devra y avoir des proies et des prédateurs interagissant les uns avec les autres. L'équilibre de ce petit écosystème sera important pour que toutes les races puissent vivre ensemble.
+   
 ** Présentation détaillée
-
-Ce projet se veut une création d'un `framework' pour la création d'un écosysteme.
-En effet, chacune des créatures sera chargée a partir d'une librairie externe.
-Ceci permettera un dynamisme et une plus grande libértée pour ces créatures.
-Par contre, ce choix oblige un plus grand niveau d'abstraction au niveau du design.
-En effet, comme il sera impossible d'assumer la présence d'aucune autre créature.
-
-Par exemple, si dans une simulation il y a des lapins, il est impossible d'assumer la présence de loup ou autre prédateur.
-Et a l'inverse, un loup ne peut pas assumer la présence de proie, que ce soit lapin, ou autre.
-Chaque créature devra donc apprendre ce qu'il peut et/ou pas faire dans l'environement dans lequel il est placé.
-
-Pour aider ce processus. Les créatures sont en deux types et deux cathégories.
-C'est-a-dire:
-Plante ou Animal puis
-Herbivore et Carnivore.
-
-Donc un animal carnivore va pouvoir tenter de manger un autre animal.
-Et etc pour les autres.
-
-De plus, pour aider les créatures a savoir s'ils peuvent manger une autre.
-Chaque créature devra avoir un historique (commun pour toute les instances) contenant des informations.
-Par exemple, avoir une liste contenant l'id des créatures qui ont été manger.
-Avoir une liste contenant l'id des créatures qui l'ont mangé.
-
-Ceci pour avoir des données pour prendre de meilleures décisions.
-
-De plus, chaque créature aura une méthode qui retournera une estimation de sa `dangerosité'.
-Ceci sera uniquement pour donner une idée. Et ne tienderas pas tout en compte.
-Et donc, cette méthode va permettre aux autres créatures d'avoir une idée de l'animositée de celle-la.
-
+   
+   Ce projet se veut une création d'un `framework' pour la création d'un écosysteme.
+   En effet, chacune des créatures sera chargée a partir d'une librairie externe.
+   Ceci permettera un dynamisme et une plus grande libértée pour ces créatures.
+   Par contre, ce choix oblige un plus grand niveau d'abstraction au niveau du design.
+   En effet, comme il sera impossible d'assumer la présence d'aucune autre créature.
+   
+   Par exemple, si dans une simulation il y a des lapins, il est impossible d'assumer la présence de loup ou autre prédateur.
+   Et a l'inverse, un loup ne peut pas assumer la présence de proie, que ce soit lapin, ou autre.
+   Chaque créature devra donc apprendre ce qu'il peut et/ou pas faire dans l'environement dans lequel il est placé.
+   
+   Pour aider ce processus. Les créatures sont en deux types et deux cathégories.
+   C'est-a-dire:
+   Plante ou Animal puis
+   Herbivore et Carnivore.
+   
+   Donc un animal carnivore va pouvoir tenter de manger un autre animal.
+   Et etc pour les autres.
+   
+   De plus, pour aider les créatures a savoir s'ils peuvent manger une autre.
+   Chaque créature devra avoir un historique (commun pour toute les instances) contenant des informations.
+   Par exemple, avoir une liste contenant l'id des créatures qui ont été manger.
+   Avoir une liste contenant l'id des créatures qui l'ont mangé.
+   
+   Ceci pour avoir des données pour prendre de meilleures décisions.
+   
+   De plus, chaque créature aura une méthode qui retournera une estimation de sa `dangerosité'.
+   Ceci sera uniquement pour donner une idée. Et ne tienderas pas tout en compte.
+   Et donc, cette méthode va permettre aux autres créatures d'avoir une idée de l'animositée de celle-la.
+   
+*** Aide à la vue
+    Les créatures auront comme responsabilitée de retourner des éléments graphiques.
+    En effet, le controlleur ayant aucune idée de la structure interne d'aucune
+    créature, ne peut assumer la présence d'aucun atribut.
+    
+    Donc, chaque créature devra produire des éléments graphiques.
+    Par exemple, chaque créature doit retourner un graphique représentant
+    l'évolution de ses capacitées.
+    Ainsi qu'une interface pour les modifier.
+    
+*** Modèle
+    
+*** Controlleur
