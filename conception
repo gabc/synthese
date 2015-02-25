@@ -36,6 +36,11 @@
    Ceci sera uniquement pour donner une idée. Et ne tienderas pas tout en compte.
    Et donc, cette méthode va permettre aux autres créatures d'avoir une idée de l'animositée de celle-la.
    
+*** Fonction
+    Malheureusement, le travail avec des librairies impose quelques contraintes.
+    Une de celles-ci, étant que seulement des fonctions peuvent etres éxposé d'une librairie au runtime.
+    Donc, chaque librairie devra crée une fonction qui sera appellé pour créer une nouvelle créature.
+
 *** Aide à la vue
     Les créatures auront comme responsabilitée de retourner des éléments graphiques.
     En effet, le controlleur ayant aucune idée de la structure interne d'aucune
@@ -47,5 +52,12 @@
     Ainsi qu'une interface pour les modifier.
     
 *** Modèle
+    Chaque librairie sera représentée par un objet.
+    Contenant, un id, le handler de la librairie, le nom de cette librairie (sans l'extension),
+    et le pointeur de la fonction de construction.
     
+    Chaque créature aura un champ `id' qui sera le meme que celui de l'objet d'enregistrement.
+    Ceci, dans le but d'avoir des informations sur le type de l'objet.
+
 *** Controlleur
+    
