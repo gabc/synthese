@@ -63,3 +63,25 @@
     Lors de chaque `tick', la méthode d'update de chaque Creature sera appellé.
     Le temps de chaque `tick' sera variable, selon la vitesse choisie par l'utilisateur.
     
+    À chaque `tick', une double boucle sera effectuée.
+    Une première sur chaque élément de la liste.
+    Et une autre, interne. Pour voir si le premier peut interagir avec le second.
+
+    La méthode `update' sera appellé avant d'entammer la seconde boucle.
+    Cette méthode retournera une valeur pour savoir si la créature à besoin
+    d'intéragir avec une autre autour d'elle.
+
+    Si il est possible de construire une sous liste, qui contiendera seulement
+    les créatures visibles par la première. Ceci sans avoir à traverser la liste
+    une seconde fois, ce sera fait. Pour l'instant, O(n²).
+
+    Ensuite, si jamais la première créature veut intéragir.
+    La méthode `doSomethingWith' de la créature sera appellée.
+    Laissant celle-ci faire ce qu'elle veut faire.
+
+    Ceci, dans un but d'éviter, autant que possible, un comportement O(n²)
+    obligatoire pour chaque Créature.
+
+*** Combat
+    Les combat seront gérés de la façon suivante:
+    Chaque Créature aura une force d'attaque et un niveau de défense.
