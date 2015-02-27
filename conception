@@ -38,7 +38,7 @@
    
 *** Fonction
     Malheureusement, le travail avec des librairies impose quelques contraintes.
-    Une de celles-ci, étant que seulement des fonctions peuvent etres éxposé d'une librairie au runtime.
+    Une de celles-ci, étant que seulement des fonctions peuvent êtres éxposé d'une librairie au runtime.
     Donc, chaque librairie devra crée une fonction qui sera appellé pour créer une nouvelle créature.
 
 *** Aide à la vue
@@ -85,3 +85,43 @@
 *** Combat
     Les combat seront gérés de la façon suivante:
     Chaque Créature aura une force d'attaque et un niveau de défense.
+    Ceux-ci seront utilisé lors des calculs de combat.
+    La formule sera:
+	c2.health -= c1.attaque - c2.defense
+    health, bien entendu sera >= 0 en tout temps.
+
+    Creature va implémenter la méthode de combat. Donc les créatures spécifiques n'ont pas à le faire.
+    Cette méthode va demander à chaque tour de combat si la créature en question veut continuer le combat ou pas.
+    Si le combat continue, les dégats seront calculés et retirés de chacunes des créatures.
+  
+    Le combat se termine, soit quand une des deux prend la fuite, ou bien, quand une des deux meurt.
+
+*** Mort d'une créature
+    Lort de la mort d'une Créature, elle se transforme en Nourriture.
+    La Nourriture se dégrade avec le temps.
+    À chaque `tick' la nourriture va perdre un peu de son contenu. Jusqu'à atteindre le 0, et disparaitre.
+    Losrqu'une Créature se nourrira sur de la Nourriture, une quantité du contenue de la Nourriture sera transferée dans la Créature.
+
+** Vue
+   La vue sera composée de plusieurs `window'. Qui seront appellé au bon moment par les objets concernés.
+   Le point d'entré qui refraichira toute la vue est le `MainWindow'. Qui rafraichira les Widgets en fonction des besoins.
+   Celui-ci va rafraichir le GameCanvas avec les nouvelles informations du modele.
+   Le canevas central du jeu contiendera des QGraphicsItem, et sera un gros QPainter avec un QGraphicScene.
+   
+   Le `MainWindow' possedera un `backbuffer' pour contenir l'entiereté du terrain.
+   Et seulement une partie de ce `backbuffer' sera affiché à un moment donné.
+   Ce qui va permettre de simplifier le déplacement sur la carte ainsi que le zoom.
+
+*** DNAGraph
+    Cet objet servira de base pour afficher les données statistiques de chaque Créature.
+    Comme il est impossible de connaitre qu'elle donnée sera importante pour chacune des Créatures.
+    DNAGraph sera une extension de QXYSeries qui simplifiera la création de graphique.
+    
+    Il sera donc possible d'ajouter des lignes sur les axes pour avoir un graphe contenant des informations complèxes.
+
+*** DNAChanger
+    Cet object à pour but de définir une interface pour le changement de certains atributs des Créatures.
+    Par exemple, si l'utilisateur séléctionne une Créature C, il sera apte de voir avec précision son `ADN'.
+    C'est-à-dire le contenu de ses atributs qui définissent son comportement.
+    Ainsi que d'avoir directement le contrôle sur les données comportomentales de C.
+

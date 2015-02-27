@@ -37,7 +37,7 @@ Ces méthodes sont:
 		Par exemple, s'ils sont de la meme especes, de sexe différent,
 		si peutSeReproduire est vrai, etc.
 
-	Creature * reproduitAvec(const Creature *c)
+	Creature * reproduceWith(const Creature *c)
 		Crée un nouvel enfant avec selon les regles de cet animal.
 	
 	void update(void)
@@ -47,7 +47,7 @@ Ces méthodes sont:
 	bool isAlive(void)
 		Retourne true si la Creature est en vie.
 
-	QRect place(void) // Changer le nom
+	QRect position(void) // Changer le nom
 		Retourne un QRect représentant l'espace pris par la Créature.
 
 	QDnaInterface changeStats(void)
@@ -58,3 +58,14 @@ Ces méthodes sont:
 		
 	int hitPower(void)
 		Retourne la force de frappe de la Créature
+		Calcule en fonction de la force de celle-ci.
+
+	int defence(void)
+		Retourne la capacité défensive de la Créature
+
+	int getId(void)
+		Retourne l'id de la Créature
+
+	void attack(Creature *c)
+		Enclanche l'attaque entre this et *c.
+
