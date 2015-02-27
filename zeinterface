@@ -69,3 +69,10 @@ Ces méthodes sont:
 	void attack(Creature *c)
 		Enclanche l'attaque entre this et *c.
 
+	bool isCarnivore(void)
+		Retourne true si la Créature est carnivore.
+		False, si elle est herbivore.
+
+	bool isAnimal(void)
+		Retourne true si la Créature est un Animal.
+		False, si c'est un Végétal.
