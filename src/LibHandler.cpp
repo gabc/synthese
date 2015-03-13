@@ -2,7 +2,7 @@
 
 LibHandler::LibHandler(QString name) {
 	this->name = name;
-	this->id = this->getNewId();
+	this->id = this->getNextId();
 	this->handler = this->getHandler(name);
 	this->constructor = this->getConstructor();
 }
@@ -40,4 +40,10 @@ LibHandler::getConstructor(void) {
 		qDebug() << "Found constructor";
 		return fp;
 	}
+}
+
+int
+getNextId(void)
+{
+	return glbid++;
 }
