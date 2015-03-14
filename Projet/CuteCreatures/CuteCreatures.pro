@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     LibHandler.cpp
 
 HEADERS  += mainwindow.h \
-    LibHandler.h
+    LibHandler.h \
+    data.h
 
 FORMS    += mainwindow.ui
 

@@ -1,10 +1,8 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-
+#include "data.h"
 #include "LibHandler.h"
-
-typedef int (*func)();
 
 int main(int argc, char *argv[])
 {

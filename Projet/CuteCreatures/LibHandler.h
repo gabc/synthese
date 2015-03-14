@@ -4,11 +4,10 @@
 #include <QString>
 #include <QDebug>
 #include <dlfcn.h>
+#include "data.h"
 
 // Windows thing. Need to make two separate files.
 //#include <Windows.h>
-
-typedef int (*func)();
 
 static int glbid = 0;
 
