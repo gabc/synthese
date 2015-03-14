@@ -14,11 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    LibHandler.cpp
+    LibHandler.cpp \
+    Creature.cpp
 
 HEADERS  += mainwindow.h \
     LibHandler.h \
-    data.h
+    data.h \
+    Creature.h
 
 FORMS    += mainwindow.ui
 
