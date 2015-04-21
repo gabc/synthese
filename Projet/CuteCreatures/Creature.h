@@ -25,6 +25,13 @@ protected:
     virtual void attack(Creature *c);
     virtual bool isCarnivore(void);
     virtual bool isAnimal(void);
+
+private:
+	QPoint pos;
+	bool m_isCarnivore;
+	bool m_isAnimal;
+	int id;
+	QSize taille;
 };
 
 #endif // CREATURE_H

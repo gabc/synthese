@@ -2,7 +2,11 @@
 #include <QApplication>
 
 #include "data.h"
+#include "Creature.h"
+#include "Animal.h"
+#include "Vegetal.h"
 #include "LibHandler.h"
+
 
 int main(int argc, char *argv[])
 {
