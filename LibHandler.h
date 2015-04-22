@@ -3,11 +3,10 @@
 
 #include <QString>
 #include <QDebug>
-#include <dlfcn.h>
 #include "data.h"
 
 // Windows thing. Need to make two separate files.
-//#include <Windows.h>
+
 
 static int glbid = 0;
 
@@ -17,14 +16,14 @@ public:
     LibHandler(QString *name);
     ~LibHandler();
 
-    void *getHandler(QString *name);
+    mod getHandler(QString *name);
     func getConstructor();
     int getNextId();
 
 private:
     int id;
     QString name;
-    void *handler;
+    mod handler;
     func constructor;
 };
 
