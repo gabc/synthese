@@ -27,7 +27,7 @@ LibHandler::getHandler(QString *name) {
     mod module;
     LPCTSTR fp;
 
-	formatName(name);
+	//formatName(name);
 
 	fp = (LPCTSTR)name->toLocal8Bit().constData();
 
