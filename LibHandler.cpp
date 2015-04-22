@@ -18,6 +18,10 @@ LibHandler::LibHandler(QString *name) {
     this->constructor = this->getConstructor();
 }
 
+LibHandler::~LibHandler(){
+	// delete this->name; // FUCK THIS SHITTE
+}
+
 mod
 LibHandler::getHandler(QString *name) {
     mod module;
@@ -25,10 +29,10 @@ LibHandler::getHandler(QString *name) {
 
 	formatName(name);
 
-    fp = (LPCTSTR)name->toStdString().c_str();
+	fp = (LPCTSTR)name->toLocal8Bit().constData();
 
 #ifdef _WIN32
-	module = LoadLibrary(fp);
+	module = LoadLibrary((const wchar_t*)name->utf16());
 #else
 	LibGetError(); // This needs to happend first.
     module = dlopen(fp, RTLD_LAZY);
@@ -58,7 +62,7 @@ LibHandler::getConstructor(void) {
 		qDebug() << __FILE__ << ":" << __LINE__ << LibGetError() << " can't find proc";
         return NULL;
     } else {
-        qDebug() << "Found constructor";
+        qDebug() << "Found constructor " << fp();
         return fp;
     }
 }
