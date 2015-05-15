@@ -68,7 +68,7 @@ public class SyntheseFrame extends JFrame {
         this.getContentPane().add(btnAjout, null);
         this.getContentPane().add(jButton1, null);
 
-        Hashtable<String, Component> t = new Hashtable<String, Component>();
+        /*         Hashtable<String, Component> t = new Hashtable<String, Component>();
         JButton b = new JButton();
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -81,7 +81,7 @@ public class SyntheseFrame extends JFrame {
         this.dc = new DNAChanger(t);
         this.dc.setSize(600, 400);
         this.dc.setLocationRelativeTo(this);
-        this.dc.setVisible(true);
+        this.dc.setVisible(true); */
 
         this.add(this.c);
         this.c.repaint();
@@ -121,11 +121,12 @@ public class SyntheseFrame extends JFrame {
             }
         }
 
-        Iterator<Creature> clj = liste.iterator();
-        cli = liste.iterator();
+        Iterator<Creature> clj = liste.listIterator();
+        cli = liste.listIterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
             if (c.update()) {
+                clj = liste.listIterator();
                 while (clj.hasNext()) {
                     Creature d = clj.next();
                     Creature temp;
@@ -134,13 +135,9 @@ public class SyntheseFrame extends JFrame {
                         toAdd.add(temp);
                 }
             }
-            if (c.getTaille().getX() == 1 && c.getTaille().getY() == 0) {
-                System.out.println("What the fuck");
-                System.out.println(c);
-            }
         }
+
         liste.addAll(toAdd);
-        System.out.println(liste.size());
         this.c.repaint(liste);
         tick++;
     }
