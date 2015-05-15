@@ -135,7 +135,7 @@ public class CreatureList<T extends Creature> implements List, Iterable {
                 return c;
             }
         }
-        System.out.println("wat" + x + " " + y);
+        System.out.println("wat " + x + " " + y);
         return null;
     }
 }

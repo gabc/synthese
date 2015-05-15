@@ -14,7 +14,8 @@ import java.util.Map;
 public class MonShit extends Animal {
     private int health;
     private int force;
-    private static Hashtable<String, ChartData> dna;
+    private Hashtable<String, ChartData> dna;
+    private Creature goal;
 
     public MonShit(int x, int y) {
         super();
@@ -23,6 +24,7 @@ public class MonShit extends Animal {
         this.force = 10;
         dna = new Hashtable<String, ChartData>();
         dna.put("force", new ChartData());
+        updateDNA();
     }
 
     @Override
@@ -67,9 +69,8 @@ public class MonShit extends Animal {
 
     @Override
     public Boolean update() {
-        updateDNA();
-        force += 10;
-        /* this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1); */
+//        this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1);
+        
         return true;
     }
 
@@ -78,7 +79,6 @@ public class MonShit extends Animal {
         Boolean alivep = true;
         if (this.health <= 0) {
             alivep = false;
-            System.out.println("I died");
         }
         return alivep;
     }

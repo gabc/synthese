@@ -63,7 +63,7 @@ public class SyntheseFrame extends JFrame {
         btnAjout.addActionListener(ec);
         this.liste = new CreatureList();
         this.liste.add(new MonShit(0, 0));
-        this.liste.add(new MonShit(1, 1));
+        this.liste.add(new MonShit(10, 20));
 
         this.getContentPane().add(btnAjout, null);
         this.getContentPane().add(jButton1, null);
@@ -91,7 +91,6 @@ public class SyntheseFrame extends JFrame {
                 int x = e.getX() / SyntheseFrame.this.c.getSizeRect();
                 int y = e.getY() / SyntheseFrame.this.c.getSizeRect();
                 try {
-                    System.out.println(liste.getCreature(x, y).getTaille().getX());
                     liste.getCreature(x, y).showDNAChart();
                 } catch (Exception ex) {
                     System.out.println("Y'a rien la");
@@ -105,10 +104,10 @@ public class SyntheseFrame extends JFrame {
         while (cli.hasNext()) {
             Creature t = cli.next();
             if (c.getTaille().equals(t.getTaille())) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private void mainLoop() {
@@ -131,13 +130,16 @@ public class SyntheseFrame extends JFrame {
                     Creature d = clj.next();
                     Creature temp;
                     temp = c.interactWith(d);
-                    if (temp != null && onOccupedSpace(temp, liste))
+                    if (temp != null && !onOccupedSpace(temp, liste) && !onOccupedSpace(temp, toAdd) &&
+                        liste.size() < 20) {
                         toAdd.add(temp);
+                    }
                 }
             }
         }
 
         liste.addAll(toAdd);
+
         this.c.repaint(liste);
         tick++;
     }
