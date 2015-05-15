@@ -37,7 +37,7 @@ public class CreatureList<T extends Creature> implements List, Iterable {
 
     @Override
     public Object[] toArray() {
-        return (Creature[])new Object[0];
+        return this.liste.toArray();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CreatureList<T extends Creature> implements List, Iterable {
 
     @Override
     public boolean addAll(Collection c) {
-        return false;
+        return this.liste.addAll(c);
     }
 
     @Override

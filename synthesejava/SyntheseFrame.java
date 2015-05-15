@@ -108,6 +108,7 @@ public class SyntheseFrame extends JFrame {
     }
     
     private void mainLoop(CreatureList cl) {
+        CreatureList toAdd = new CreatureList();
         Iterator<Creature> cli = cl.iterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
@@ -125,23 +126,12 @@ public class SyntheseFrame extends JFrame {
                     Creature temp;
                     temp = c.interactWith(d);
                     if(temp != null && cl.size() < 20 && onOccupedSpace(temp, cl))
-                        cl.add(temp);
+                        toAdd.add(temp);
                 }
             }
         }
+        cl.addAll(toAdd);
         this.c.repaint(cl);
-        /* for (int i = 0; i < cl.size(); i++) {
-            if (((Creature)cl.get(i)).update()) {
-                for (int j = 0; j < cl.size(); j++) {
-                    Creature temp;
-                    temp = ((Creature)cl.get(i)).interactWith((Creature)cl.get(j));
-                    if(temp != null && cl.size() < 20 && onOccupedSpace(temp, cl))
-                        cl.add(temp);
-                    System.out.println(cl.size());
-                }
-            }
-            this.c.repaint(cl);
-        } */
         tick++;
     }
 
