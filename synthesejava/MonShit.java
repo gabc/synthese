@@ -47,9 +47,10 @@ public class MonShit extends Animal {
     @Override
     public Boolean canReproduceWith(Creature c) {
         if(c instanceof MonShit){
-            System.out.println("yaye");
+//            System.out.println("yaye");
             return true;
-        }
+        } else
+            System.out.println("wat");
         return false;
     }
 
@@ -57,6 +58,8 @@ public class MonShit extends Animal {
     public Creature reproduceWith(Creature c) {
         MonShit o = (MonShit)c;
         MonShit n = new MonShit(this.taille.getX()+1, this.taille.getY());
+        if(taille.getX() == 1 && taille.getY() == 0)
+            System.out.println("On y passe");
         if(this.canReproduceWith(c)){
             n.setForce((this.force + o.getForce()) / 2);
             return n;

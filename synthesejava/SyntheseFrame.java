@@ -38,9 +38,9 @@ public class SyntheseFrame extends JFrame {
     private DNAChanger dc;
     private JButton jButton1 = new JButton();
     private JButton btnAjout = new JButton();
-    
+
     public static int tick = 0;
-    
+
     public SyntheseFrame() {
         try {
             jbInit();
@@ -48,7 +48,7 @@ public class SyntheseFrame extends JFrame {
             e.printStackTrace();
         }
     }
-    
+
     private void jbInit() throws Exception {
         this.getContentPane().setLayout(null);
         this.setSize(new Dimension(600, 400));
@@ -70,11 +70,11 @@ public class SyntheseFrame extends JFrame {
 
         Hashtable<String, Component> t = new Hashtable<String, Component>();
         JButton b = new JButton();
-        b.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("ASDF");
-                }
-            });
+        b.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("ASDF");
+            }
+        });
         t.put("Hi!", b);
         t.put("Yo", new JButton());
         t.put("ALALA", new JSlider());
@@ -85,18 +85,22 @@ public class SyntheseFrame extends JFrame {
 
         this.add(this.c);
         this.c.repaint();
-        
+
         this.c.addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
-                int y = e.getX() / SyntheseFrame.this.c.getSizeRect();
-                int x = e.getY() / SyntheseFrame.this.c.getSizeRect();
-                System.out.println(liste.getCreature(x, y).getTaille().getX());
-                liste.getCreature(x, y).showDNAChart();
+                int x = e.getX() / SyntheseFrame.this.c.getSizeRect();
+                int y = e.getY() / SyntheseFrame.this.c.getSizeRect();
+                try {
+                    System.out.println(liste.getCreature(x, y).getTaille().getX());
+                    liste.getCreature(x, y).showDNAChart();
+                } catch (Exception ex) {
+                    System.out.println("Y'a rien la");
+                }
             }
         });
     }
-    
-    private Boolean onOccupedSpace(Creature c, CreatureList cl){
+
+    private Boolean onOccupedSpace(Creature c, CreatureList cl) {
         Iterator<Creature> cli = cl.iterator();
         while (cli.hasNext()) {
             Creature t = cli.next();
@@ -106,18 +110,19 @@ public class SyntheseFrame extends JFrame {
         }
         return true;
     }
-    
-    private void mainLoop(CreatureList cl) {
+
+    private void mainLoop() {
         CreatureList toAdd = new CreatureList();
-        Iterator<Creature> cli = cl.iterator();
+        Iterator<Creature> cli = liste.iterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
             if (!c.isAlive()) {
                 cli.remove();
             }
         }
-        Iterator<Creature> clj = cl.iterator();
-        cli = cl.iterator();
+
+        Iterator<Creature> clj = liste.iterator();
+        cli = liste.iterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
             if (c.update()) {
@@ -125,13 +130,18 @@ public class SyntheseFrame extends JFrame {
                     Creature d = clj.next();
                     Creature temp;
                     temp = c.interactWith(d);
-                    if(temp != null && cl.size() < 20 && onOccupedSpace(temp, cl))
+                    if (temp != null && onOccupedSpace(temp, liste))
                         toAdd.add(temp);
                 }
             }
+            if (c.getTaille().getX() == 1 && c.getTaille().getY() == 0) {
+                System.out.println("What the fuck");
+                System.out.println(c);
+            }
         }
-        cl.addAll(toAdd);
-        this.c.repaint(cl);
+        liste.addAll(toAdd);
+        System.out.println(liste.size());
+        this.c.repaint(liste);
         tick++;
     }
 
@@ -144,7 +154,7 @@ public class SyntheseFrame extends JFrame {
                         while (!Thread.currentThread().isInterrupted()) {
                             try {
                                 Thread.sleep(1000);
-                                mainLoop(liste);
+                                mainLoop();
                             } catch (InterruptedException e) {
                                 Thread.currentThread().interrupt();
                             }
