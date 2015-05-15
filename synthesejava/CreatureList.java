@@ -22,7 +22,7 @@ public class CreatureList<T extends Creature> implements List, Iterable {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.liste.isEmpty();
     }
 
     @Override
