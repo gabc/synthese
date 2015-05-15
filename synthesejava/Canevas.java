@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
+import java.util.Iterator;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
@@ -44,14 +46,15 @@ public class Canevas extends JPanel {
 
     void repaint(CreatureList cl) {
         buffer = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
-        for (int i = 0; i < cl.size(); i++) {
-            Creature c = (Creature)cl.get(i);
+        Iterator<Creature> cli = cl.iterator();
+        while (cli.hasNext()) {
+            Creature c = cli.next();
             Graphics2D g = (Graphics2D)this.buffer.getGraphics();
             g.setColor(c.getColor());
             g.fillRect(c.taille.getX() * sizeRect, c.taille.getY() * sizeRect,
                        (int)c.getTaille().getLargeur() * sizeRect, (int)c.getTaille().getHauteur() * sizeRect);
-            repaint();
         }
+        repaint();
     }
 
     public void setSizeRect(int sizeRect) {

@@ -13,8 +13,10 @@ public abstract class Creature {
     Boolean isAnimal;
     int id;
     Taille taille;
-        
+
     public abstract int aggressivite();
+
+    public abstract Boolean canAttack(Creature c);
 
     public abstract void statistiques();
 
@@ -26,7 +28,7 @@ public abstract class Creature {
 
     public abstract Creature reproduceWith(Creature c);
 
-    public abstract Boolean update();
+    public abstract String update();
 
     public abstract Boolean isAlive();
 
@@ -51,9 +53,11 @@ public abstract class Creature {
     public abstract Creature interactWith(Creature creature);
 
     public abstract Color getColor();
-    
+
     public abstract void showDNAChart();
-    
+
+    public abstract void goTowards(Creature c);
+
     public double getDistance(Creature c) {
         return this.getTaille().distance(c.getTaille());
     }
@@ -63,9 +67,10 @@ public abstract class Creature {
     }
 
     public void attack(Creature c) {
-        c.takeDommage(this.hitPower());
+        if (!this.equals(c))
+            c.takeDommage(this.hitPower());
     }
-    
+
     public Boolean getIsCarnivore() {
         return isCarnivore;
     }
@@ -84,5 +89,5 @@ public abstract class Creature {
 
     public Taille getTaille() {
         return taille;
-    } 
+    }
 }

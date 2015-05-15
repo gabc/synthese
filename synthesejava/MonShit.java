@@ -38,7 +38,7 @@ public class MonShit extends Animal {
 
     @Override
     public Boolean canSee(Creature c) {
-        return null;
+        return true;
     }
 
     @Override
@@ -48,8 +48,7 @@ public class MonShit extends Animal {
 
     @Override
     public Boolean canReproduceWith(Creature c) {
-        if(c instanceof MonShit){
-//            System.out.println("yaye");
+        if (c instanceof MonShit) {
             return true;
         } else
             System.out.println("wat");
@@ -59,8 +58,8 @@ public class MonShit extends Animal {
     @Override
     public Creature reproduceWith(Creature c) {
         MonShit o = (MonShit)c;
-        MonShit n = new MonShit(this.taille.getX()+1, this.taille.getY());
-        if(this.canReproduceWith(c)){
+        MonShit n = new MonShit(this.taille.getX() + 1, this.taille.getY());
+        if (this.canReproduceWith(c)) {
             n.setForce((this.force + o.getForce()) / 2);
             return n;
         }
@@ -68,16 +67,56 @@ public class MonShit extends Animal {
     }
 
     @Override
-    public Boolean update() {
-//        this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1);
+    public Boolean canAttack(Creature c) {
+        if (!this.equals(c))
+            if (canSee(c) && getDistance(c) <= 1.5)
+                return true;
+            else {
+                goal = c;
+            }
+        return false;
+    }
+
+    @Override
+    public String update() {
+        //        this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1);
+        if (goal != null) {
+            return "goto";
+        }
+        return "attack";
+    }
+
+    @Override
+    public void goTowards(Creature c) {
+        if (getDistance(c) <= 1.5) {
+            goal = null;
+            return;
+        }
+
+        int px = 0;
+        int py = 0;
         
-        return true;
+        if (this.getTaille().getX() < c.getTaille().getX()) {
+            px++;
+        }
+        if (this.getTaille().getY() < c.getTaille().getY()) {
+            py++;
+        }
+        if (this.getTaille().getX() > c.getTaille().getX()) {
+            px--;
+        }
+        if (this.getTaille().getY() > c.getTaille().getY()) {
+            py--;
+        }
+
+        this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
     }
 
     @Override
     public Boolean isAlive() {
         Boolean alivep = true;
         if (this.health <= 0) {
+            System.out.println("isded");
             alivep = false;
         }
         return alivep;
@@ -139,7 +178,7 @@ public class MonShit extends Animal {
         }
         //System.out.println(this.getDistance(creature));
         return reproduceWith(creature);
-       /*  if (this.getDistance(creature) <= 3) {
+        /*  if (this.getDistance(creature) <= 3) {
             this.attack(creature);
         } else {
             // go towards

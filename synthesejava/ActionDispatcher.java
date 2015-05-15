@@ -2,7 +2,7 @@ package synthesejava;
 
 import java.util.Hashtable;
 
-public static class ActionDispatcher {
+public class ActionDispatcher {
     private static Hashtable<Integer, String> action = new Hashtable<Integer, String>() {
         {
             put(0, "fff");

@@ -63,7 +63,7 @@ public class SyntheseFrame extends JFrame {
         btnAjout.addActionListener(ec);
         this.liste = new CreatureList();
         this.liste.add(new MonShit(0, 0));
-        this.liste.add(new MonShit(10, 20));
+        this.liste.add(new MonShit(1, 4));
 
         this.getContentPane().add(btnAjout, null);
         this.getContentPane().add(jButton1, null);
@@ -111,6 +111,8 @@ public class SyntheseFrame extends JFrame {
     }
 
     private void mainLoop() {
+        String action;
+
         CreatureList toAdd = new CreatureList();
         Iterator<Creature> cli = liste.iterator();
         while (cli.hasNext()) {
@@ -124,15 +126,30 @@ public class SyntheseFrame extends JFrame {
         cli = liste.listIterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
-            if (c.update()) {
+            if ((action = c.update()) != null) {
                 clj = liste.listIterator();
                 while (clj.hasNext()) {
                     Creature d = clj.next();
                     Creature temp;
-                    temp = c.interactWith(d);
-                    if (temp != null && !onOccupedSpace(temp, liste) && !onOccupedSpace(temp, toAdd) &&
-                        liste.size() < 20) {
-                        toAdd.add(temp);
+                    if (action.equals("attack")) {
+                        if (c.canAttack(d)) {
+                            c.attack(d);
+                        }
+                    } else if (action.equals("reproduce")) {
+                        temp = c.interactWith(d);
+                        if (temp != null && !onOccupedSpace(temp, liste) && !onOccupedSpace(temp, toAdd) &&
+                            liste.size() < 20) {
+                            toAdd.add(temp);
+                        }
+                    } else if (action.equals("goto")) {
+                        Taille oldc = c.getTaille();
+                        Taille oldd = d.getTaille();
+                        c.goTowards(d);
+                        if (c.getDistance(d) == 0) {
+                            c.setTaille(oldc);
+                            d.setTaille(oldd);
+                        }
+                    } else {
                     }
                 }
             }
