@@ -114,11 +114,10 @@ public class SyntheseFrame extends JFrame {
         this.scrollpane.repaint();
 
         pauseThread = new PauseThread();
-        playThread = new PlayThread();
+        playThread = new PlayThread(1);
 
         pauseThread.start();
         playThread.start();
-        playThread.interrupt();
 
         this.c.addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
@@ -234,12 +233,17 @@ public class SyntheseFrame extends JFrame {
 
     public class PlayThread extends Thread {
         private boolean state;
-
-        public PlayThread() {
+        private int i;
+        public PlayThread(int i) {
             state = false;
+            this.i = i;
         }
 
         public synchronized void run() {
+            if(i == 1){
+                i = 0;
+                state = true;
+            }
             while (true) {
                 try {
                     Thread.currentThread().sleep(400);
@@ -270,7 +274,7 @@ public class SyntheseFrame extends JFrame {
                     while (state)
                         wait();
                 } catch (InterruptedException e) {
-                    System.out.println("playThread interupt");
+                    System.out.println("PauseThread interupt");
                     state = !state;
                 }
                 c.invalidate();
