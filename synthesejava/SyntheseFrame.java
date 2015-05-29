@@ -27,7 +27,9 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -38,9 +40,10 @@ public class SyntheseFrame extends JFrame {
     private DNAChanger dc;
     private JButton jButton1 = new JButton();
     private JButton btnAjout = new JButton();
-
+    private JScrollPane scrollpane;
     public static int tick = 0;
-
+    private Dimension drawArea;
+    
     public SyntheseFrame() {
         try {
             jbInit();
@@ -50,23 +53,29 @@ public class SyntheseFrame extends JFrame {
     }
 
     private void jbInit() throws Exception {
-        this.getContentPane().setLayout(null);
-        this.setSize(new Dimension(600, 400));
+        //this.getContentPane().setLayout(null);
+        //this.setSize(new Dimension(600, 400));
         this.setTitle("Synthese");
+        this.drawArea = new Dimension(100, 100);
         ec = new Ecouteur();
-        this.c = new Canevas(new Rectangle(0, 0, 475, 275));
+        this.c = new Canevas();
+        this.c.setPreferredSize(new Dimension(1000, 1000));
+        this.scrollpane = new JScrollPane(this.c, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.scrollpane.setPreferredSize(this.drawArea);
+                
+        
         jButton1.setText("jButton1");
-        jButton1.setBounds(new Rectangle(35, 330, 75, 21));
+        //jButton1.setBounds(new Rectangle(35, 330, 75, 21));
         jButton1.addActionListener(ec);
         btnAjout.setText("jButton2");
-        btnAjout.setBounds(new Rectangle(195, 315, 75, 21));
+        //btnAjout.setBounds(new Rectangle(195, 315, 75, 21));
         btnAjout.addActionListener(ec);
         this.liste = new CreatureList();
         this.liste.add(new MonShit(0, 0));
         this.liste.add(new MonShit(1, 4));
 
-        this.getContentPane().add(btnAjout, null);
-        this.getContentPane().add(jButton1, null);
+        this.getContentPane().add(btnAjout, BorderLayout.NORTH);
+        this.getContentPane().add(jButton1, BorderLayout.SOUTH);
 
         /*         Hashtable<String, Component> t = new Hashtable<String, Component>();
         JButton b = new JButton();
@@ -83,11 +92,12 @@ public class SyntheseFrame extends JFrame {
         this.dc.setLocationRelativeTo(this);
         this.dc.setVisible(true); */
 
-        this.add(this.c);
-        this.c.repaint();
+        this.add(this.scrollpane, BorderLayout.CENTER);
+        this.scrollpane.repaint();
 
         this.c.addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
+                SyntheseFrame.this.c.scrollRectToVisible(new Rectangle(e.getX(), e.getY(), 1, 1));
                 int x = e.getX() / SyntheseFrame.this.c.getSizeRect();
                 int y = e.getY() / SyntheseFrame.this.c.getSizeRect();
                 try {
@@ -156,8 +166,10 @@ public class SyntheseFrame extends JFrame {
         }
 
         liste.addAll(toAdd);
-
+        this.c.invalidate();
         this.c.repaint(liste);
+        
+        this.scrollpane.repaint();
         tick++;
     }
 
