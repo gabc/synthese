@@ -25,12 +25,17 @@ import java.util.List;
 
 import java.util.Random;
 
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -41,7 +46,15 @@ public class SyntheseFrame extends JFrame {
     private Canevas c;
     private DNAChanger dc;
     private JButton jButton1 = new JButton();
-    private JButton btnAjout = new JButton();
+    private JToggleButton ajoutLapin = new JToggleButton();
+    private JToggleButton ajoutShit = new JToggleButton();
+    private JToggleButton ajoutFoin = new JToggleButton();
+    private JToggleButton clearAjout = new JToggleButton();
+
+    private PlayThread playThread;
+    private PauseThread pauseThread;
+
+    private boolean runningState;
     private JScrollPane scrollpane;
     public static int tick = 0;
     private Dimension drawArea;
@@ -55,8 +68,6 @@ public class SyntheseFrame extends JFrame {
     }
 
     private void jbInit() throws Exception {
-        //this.getContentPane().setLayout(null);
-        //this.setSize(new Dimension(600, 400));
         this.setTitle("Synthese");
         this.drawArea = new Dimension(100, 100);
         ec = new Ecouteur();
@@ -66,47 +77,69 @@ public class SyntheseFrame extends JFrame {
                 new JScrollPane(this.c, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.scrollpane.setPreferredSize(this.drawArea);
 
-
-        jButton1.setText("jButton1");
-        //jButton1.setBounds(new Rectangle(35, 330, 75, 21));
+        jButton1.setText("go");
         jButton1.addActionListener(ec);
-        btnAjout.setText("jButton2");
-        //btnAjout.setBounds(new Rectangle(195, 315, 75, 21));
-        btnAjout.addActionListener(ec);
+
+        ButtonGroup bg = new ButtonGroup();
+        Box b = Box.createHorizontalBox();
+
+        ajoutLapin.setText("Lapin");
+        ajoutLapin.addActionListener(ec);
+        bg.add(ajoutLapin);
+        b.add(ajoutLapin);
+
+        ajoutShit.setText("Shit");
+        ajoutShit.addActionListener(ec);
+        bg.add(ajoutShit);
+        b.add(ajoutShit);
+
+        ajoutFoin.setText("Foin");
+        ajoutFoin.addActionListener(ec);
+        bg.add(ajoutFoin);
+        b.add(ajoutFoin);
+
+        clearAjout.setText("Clear");
+        clearAjout.addActionListener(ec);
+        bg.add(clearAjout);
+        b.add(clearAjout);
+
         this.liste = new CreatureList();
         this.liste.add(new MonShit(0, 0));
         this.liste.add(new Lapin(1, 4));
 
-        this.getContentPane().add(btnAjout, BorderLayout.NORTH);
+        this.getContentPane().add(b, BorderLayout.NORTH);
         this.getContentPane().add(jButton1, BorderLayout.SOUTH);
-
-        /*         Hashtable<String, Component> t = new Hashtable<String, Component>();
-        JButton b = new JButton();
-        b.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("ASDF");
-            }
-        });
-        t.put("Hi!", b);
-        t.put("Yo", new JButton());
-        t.put("ALALA", new JSlider());
-        this.dc = new DNAChanger(t);
-        this.dc.setSize(600, 400);
-        this.dc.setLocationRelativeTo(this);
-        this.dc.setVisible(true); */
 
         this.add(this.scrollpane, BorderLayout.CENTER);
         this.scrollpane.repaint();
 
+        pauseThread = new PauseThread();
+        playThread = new PlayThread();
+
+        pauseThread.start();
+        playThread.start();
+        playThread.interrupt();
+
         this.c.addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
-                SyntheseFrame.this.c.scrollRectToVisible(new Rectangle(e.getX(), e.getY(), 1, 1));
                 int x = e.getX() / SyntheseFrame.this.c.getSizeRect();
                 int y = e.getY() / SyntheseFrame.this.c.getSizeRect();
+
+                if (ajoutShit.isSelected()) {
+                    SyntheseFrame.this.liste.add(new MonShit(x, y));
+                    return;
+                } else if (ajoutLapin.isSelected()) {
+                    SyntheseFrame.this.liste.add(new Lapin(x, y));
+                    return;
+                } else if (ajoutFoin.isSelected()) {
+                    SyntheseFrame.this.liste.add(new Foin(x, y));
+                    return;
+                }
+
                 try {
                     liste.getCreature(x, y).showDNAChart();
                 } catch (Exception ex) {
-                    System.out.println("Y'a rien la");
+                    //                    System.out.println("Y'a rien la");
                 }
             }
         });
@@ -125,7 +158,7 @@ public class SyntheseFrame extends JFrame {
 
     private void mainLoop() {
         String action;
-
+        System.out.println(this.liste.size());
         CreatureList toAdd = new CreatureList();
         Iterator<Creature> cli = liste.iterator();
         while (cli.hasNext()) {
@@ -187,30 +220,62 @@ public class SyntheseFrame extends JFrame {
     protected class Ecouteur implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == jButton1) {
-                new Thread(new Runnable() {
-                    public void run() {
-                        Thread.currentThread();
-                        while (!Thread.currentThread().isInterrupted()) {
-                            try {
-                                Thread.sleep(1000);
-                                mainLoop();
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                            }
-                        }
-                    }
-                }).start();
-            } else if (e.getSource() == btnAjout) {
-                JFileChooser fc = new JFileChooser();
-                int returnVal = fc.showOpenDialog(SyntheseFrame.this);
-                File file = fc.getSelectedFile();
-                System.out.println(file.getAbsolutePath());
-                //                LibHandler lh = new LibHandler(file, "macreature");
-                try {
-                    ClassHackThing.addFile(file);
-                } catch (IOException f) {
-                    f.printStackTrace();
+                if (!runningState) {
+                    pauseThread.interrupt();
+                    playThread.interrupt();
+                } else {
+                    playThread.interrupt();
+                    pauseThread.interrupt();
                 }
+                runningState = !runningState;
+            }
+        }
+    }
+
+    public class PlayThread extends Thread {
+        private boolean state;
+
+        public PlayThread() {
+            state = false;
+        }
+
+        public synchronized void run() {
+            while (true) {
+                try {
+                    Thread.currentThread().sleep(400);
+
+                    while (state)
+                        wait();
+                } catch (InterruptedException e) {
+                    System.out.println("playThread interupt");
+                    state = !state;
+                }
+                mainLoop();
+            }
+        }
+    }
+
+    public class PauseThread extends Thread {
+        private boolean state;
+
+        public PauseThread() {
+            state = false;
+        }
+
+        public synchronized void run() {
+            while (true) {
+                try {
+                    Thread.currentThread().sleep(400);
+
+                    while (state)
+                        wait();
+                } catch (InterruptedException e) {
+                    System.out.println("playThread interupt");
+                    state = !state;
+                }
+                c.invalidate();
+                c.repaint(liste);
+                scrollpane.repaint();
             }
         }
     }

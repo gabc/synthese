@@ -87,18 +87,13 @@ public class MonShit extends Animal {
         //        System.out.println(goal);
         if (this.aggressivite() < 5)
             if (goal != null) {
-                System.out.println("as a goal");
+//                System.out.println("as a goal");
                 if (getDistance(goal) < 1.5)
                     return "attack";
                 return "goto";
             }
-        System.out.println("wander");
+//        System.out.println("wander");
         return "wander";
-    }
-
-    @Override
-    public Taille position() {
-        return this.taille;
     }
 
     @Override

@@ -2,25 +2,19 @@ package synthesejava;
 
 import java.awt.Color;
 
-import java.util.Hashtable;
-
-public class Lapin extends Animal{
-    private int force;
-    private Hashtable<String, ChartData> dna;
-    
-    public Lapin(int x, int y) {
+public class Foin extends Vegetal{
+    public Foin(int x, int y) {
         super();
         this.taille = new Taille(x, y);
-        this.health = 20;
-        this.force = 5;
-        this.color = new Color(123,123,123);
+        this.health = 5;
+        this.color = new Color(218,184,16);
         this.faim = 10;
         this.maxFaim = 20;
     }
 
     @Override
     public int aggressivite() {
-        return (int)(this.faim - this.maxFaim);
+        return 0;
     }
 
     @Override
@@ -34,37 +28,22 @@ public class Lapin extends Animal{
 
     @Override
     public boolean canSee(Creature c) {
-        return true;
-    }
-
-    @Override
-    public boolean canReproduce() {
         return false;
     }
 
     @Override
+    public boolean canReproduce() {
+        return true;
+    }
+
+    @Override
     public boolean canReproduceWith(Creature c) {
-        if (c instanceof Lapin) {
-            return true;
-        } else
-            System.out.println("wat lapin");
         return false;
     }
 
     @Override
     public Creature reproduceWith(Creature c) {
-        Lapin o = (Lapin)c;
-        Lapin n = new Lapin(this.taille.getX() + 1, this.taille.getY());
-        if (this.canReproduceWith(c)) {
-            return n;
-        }
         return null;
-    }
-
-    @Override
-    public String update() {
-        super.update();
-        return "fuir";
     }
 
     @Override
@@ -73,7 +52,7 @@ public class Lapin extends Animal{
 
     @Override
     public int health() {
-        return this.health;
+        return 0;
     }
 
     @Override
@@ -98,11 +77,11 @@ public class Lapin extends Animal{
 
     @Override
     public boolean isAnimal() {
-        return true;
+        return false;
     }
 
     @Override
-    public Creature interactWith(Creature c) {
+    public Creature interactWith(Creature creature) {
         return null;
     }
 

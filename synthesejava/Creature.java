@@ -33,8 +33,6 @@ public abstract class Creature {
 
     public abstract Creature reproduceWith(Creature c);
 
-    public abstract Taille position();
-
     public abstract void changeStats();
 
     public abstract int health();
@@ -173,6 +171,10 @@ public abstract class Creature {
     
     public Color getColor() {
         return this.color;
+    }
+    
+    public Taille position() {
+        return this.taille;
     }
     
     public String update(){
