@@ -12,10 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MonShit extends Animal {
-    private int health;
     private int force;
     private Hashtable<String, ChartData> dna;
-    private Creature goal;
 
     public MonShit(int x, int y) {
         super();
@@ -25,11 +23,14 @@ public class MonShit extends Animal {
         dna = new Hashtable<String, ChartData>();
         dna.put("force", new ChartData());
         updateDNA();
+        this.color = new Color(255, 0, 0);
+        this.faim = 10;
+        this.maxFaim = 20;
     }
 
     @Override
     public int aggressivite() {
-        return 10;
+        return (int)(this.faim - this.maxFaim);
     }
 
     @Override
@@ -37,17 +38,19 @@ public class MonShit extends Animal {
     }
 
     @Override
-    public Boolean canSee(Creature c) {
+    public boolean canSee(Creature c) {
+        if (c == null)
+            return false;
         return true;
     }
 
     @Override
-    public Boolean canReproduce() {
-        return null;
+    public boolean canReproduce() {
+        return true;
     }
 
     @Override
-    public Boolean canReproduceWith(Creature c) {
+    public boolean canReproduceWith(Creature c) {
         if (c instanceof MonShit) {
             return true;
         } else
@@ -67,7 +70,7 @@ public class MonShit extends Animal {
     }
 
     @Override
-    public Boolean canAttack(Creature c) {
+    public boolean canAttack(Creature c) {
         if (!this.equals(c))
             if (canSee(c) && getDistance(c) <= 1.5)
                 return true;
@@ -79,47 +82,18 @@ public class MonShit extends Animal {
 
     @Override
     public String update() {
+        super.update();
         //        this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1);
-        if (goal != null) {
-            return "goto";
-        }
-        return "attack";
-    }
-
-    @Override
-    public void goTowards(Creature c) {
-        if (getDistance(c) <= 1.5) {
-            goal = null;
-            return;
-        }
-
-        int px = 0;
-        int py = 0;
-        
-        if (this.getTaille().getX() < c.getTaille().getX()) {
-            px++;
-        }
-        if (this.getTaille().getY() < c.getTaille().getY()) {
-            py++;
-        }
-        if (this.getTaille().getX() > c.getTaille().getX()) {
-            px--;
-        }
-        if (this.getTaille().getY() > c.getTaille().getY()) {
-            py--;
-        }
-
-        this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
-    }
-
-    @Override
-    public Boolean isAlive() {
-        Boolean alivep = true;
-        if (this.health <= 0) {
-            System.out.println("isded");
-            alivep = false;
-        }
-        return alivep;
+        //        System.out.println(goal);
+        if (this.aggressivite() < 5)
+            if (goal != null) {
+                System.out.println("as a goal");
+                if (getDistance(goal) < 1.5)
+                    return "attack";
+                return "goto";
+            }
+        System.out.println("wander");
+        return "wander";
     }
 
     @Override
@@ -152,19 +126,13 @@ public class MonShit extends Animal {
     }
 
     @Override
-    public Boolean isCarnivore() {
+    public boolean isCarnivore() {
         return true;
     }
 
     @Override
-    public Boolean isAnimal() {
+    public boolean isAnimal() {
         return true;
-    }
-
-    @Override
-    public Boolean takeDommage(int force) {
-        this.health -= force;
-        return this.isAlive();
     }
 
     public void construct() {
@@ -183,11 +151,6 @@ public class MonShit extends Animal {
         } else {
             // go towards
         } */
-    }
-
-    @Override
-    public Color getColor() {
-        return new Color(255, 0, 0);
     }
 
     @Override

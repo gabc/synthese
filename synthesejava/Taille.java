@@ -24,16 +24,18 @@ public class Taille {
         return Math.sqrt(Math.pow(this.x - t.getX(), 2) + Math.pow(this.y - t.getY(), 2));
     }
 
-    public Boolean equals(Taille t){
-        if(getX() == t.getX() && getY() == t.getY())
+    public Boolean equals(Taille t) {
+        if (getX() == t.getX() && getY() == t.getY())
             return true;
         else
             return false;
     }
-    
+
     public void move(int nx, int ny) {
-        this.x = nx;
-        this.y = ny;
+        if (nx >= 0)
+            this.x = nx;
+        if (ny >= 0)
+            this.y = ny;
     }
 
     public void setLargeur(int largeur) {

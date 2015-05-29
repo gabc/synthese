@@ -23,6 +23,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.Random;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -43,7 +45,7 @@ public class SyntheseFrame extends JFrame {
     private JScrollPane scrollpane;
     public static int tick = 0;
     private Dimension drawArea;
-    
+
     public SyntheseFrame() {
         try {
             jbInit();
@@ -60,10 +62,11 @@ public class SyntheseFrame extends JFrame {
         ec = new Ecouteur();
         this.c = new Canevas();
         this.c.setPreferredSize(new Dimension(1000, 1000));
-        this.scrollpane = new JScrollPane(this.c, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.scrollpane =
+                new JScrollPane(this.c, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.scrollpane.setPreferredSize(this.drawArea);
-                
-        
+
+
         jButton1.setText("jButton1");
         //jButton1.setBounds(new Rectangle(35, 330, 75, 21));
         jButton1.addActionListener(ec);
@@ -72,7 +75,7 @@ public class SyntheseFrame extends JFrame {
         btnAjout.addActionListener(ec);
         this.liste = new CreatureList();
         this.liste.add(new MonShit(0, 0));
-        this.liste.add(new MonShit(1, 4));
+        this.liste.add(new Lapin(1, 4));
 
         this.getContentPane().add(btnAjout, BorderLayout.NORTH);
         this.getContentPane().add(jButton1, BorderLayout.SOUTH);
@@ -159,7 +162,15 @@ public class SyntheseFrame extends JFrame {
                             c.setTaille(oldc);
                             d.setTaille(oldd);
                         }
-                    } else {
+                    } else if (action.equals("wander")) {
+                        c.canAttack(d);
+                        if (c.getGoal() == null)
+                            c.goTowards(new Taille(Utils.randInt(0, 1000), Utils.randInt(0, 1000)));
+                        else {
+                            c.goTowards(d);
+                        }
+                    } else if (action.equals("fuir")) {
+                        c.goAwayFrom(d);
                     }
                 }
             }
@@ -168,7 +179,7 @@ public class SyntheseFrame extends JFrame {
         liste.addAll(toAdd);
         this.c.invalidate();
         this.c.repaint(liste);
-        
+
         this.scrollpane.repaint();
         tick++;
     }

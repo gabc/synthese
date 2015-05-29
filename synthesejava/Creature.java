@@ -9,28 +9,29 @@ import java.util.Hashtable;
 
 
 public abstract class Creature {
-    Boolean isCarnivore;
-    Boolean isAnimal;
+    boolean isCarnivore;
+    boolean isAnimal;
     int id;
+    int health;
     Taille taille;
-
+    Creature goal;
+    Color color;
+    double faim;
+    double maxFaim;
+    
     public abstract int aggressivite();
 
-    public abstract Boolean canAttack(Creature c);
+    public abstract boolean canAttack(Creature c);
 
     public abstract void statistiques();
 
-    public abstract Boolean canSee(Creature c);
+    public abstract boolean canSee(Creature c);
 
-    public abstract Boolean canReproduce();
+    public abstract boolean canReproduce();
 
-    public abstract Boolean canReproduceWith(Creature c);
+    public abstract boolean canReproduceWith(Creature c);
 
     public abstract Creature reproduceWith(Creature c);
-
-    public abstract String update();
-
-    public abstract Boolean isAlive();
 
     public abstract Taille position();
 
@@ -44,38 +45,35 @@ public abstract class Creature {
 
     public abstract int getId();
 
-    public abstract Boolean isCarnivore();
+    public abstract boolean isCarnivore();
 
-    public abstract Boolean isAnimal();
-
-    public abstract Boolean takeDommage(int force);
+    public abstract boolean isAnimal();
 
     public abstract Creature interactWith(Creature creature);
 
-    public abstract Color getColor();
-
     public abstract void showDNAChart();
 
-    public abstract void goTowards(Creature c);
-
     public double getDistance(Creature c) {
+        if (c == null)
+            return 0;
         return this.getTaille().distance(c.getTaille());
     }
 
-    public Boolean equals(Creature c) {
+    public boolean equals(Creature c) {
         return this.taille.getX() == c.taille.getX() && this.taille.getY() == c.taille.getY();
     }
 
     public void attack(Creature c) {
         if (!this.equals(c))
-            c.takeDommage(this.hitPower());
+            if(!c.takeDommage(this.hitPower()))
+                this.goal = null;
     }
 
-    public Boolean getIsCarnivore() {
+    public boolean getIsCarnivore() {
         return isCarnivore;
     }
 
-    public Boolean getIsAnimal() {
+    public boolean getIsAnimal() {
         return isAnimal;
     }
 
@@ -89,5 +87,96 @@ public abstract class Creature {
 
     public Taille getTaille() {
         return taille;
+    }
+
+    public void goTowards(Creature c) {
+        if (getDistance(c) <= 1.5) {
+            goal = null;
+            return;
+        }
+
+        int px = 0;
+        int py = 0;
+
+        if (this.getTaille().getX() < c.getTaille().getX()) {
+            px++;
+        }
+        if (this.getTaille().getY() < c.getTaille().getY()) {
+            py++;
+        }
+        if (this.getTaille().getX() > c.getTaille().getX()) {
+            px--;
+        }
+        if (this.getTaille().getY() > c.getTaille().getY()) {
+            py--;
+        }
+
+        this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
+    }
+
+    public void goTowards(Taille c) {
+        int px = 0;
+        int py = 0;
+
+        if (this.getTaille().getX() < c.getX()) {
+            px++;
+        }
+        if (this.getTaille().getY() < c.getY()) {
+            py++;
+        }
+        if (this.getTaille().getX() > c.getX()) {
+            px--;
+        }
+        if (this.getTaille().getY() > c.getY()) {
+            py--;
+        }
+        this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
+    }
+
+    public void goAwayFrom(Creature c) {
+        int px = 0;
+        int py = 0;
+
+        if (this.getTaille().getX() < c.getTaille().getX()) {
+            px--;
+        }
+        if (this.getTaille().getY() < c.getTaille().getY()) {
+            py--;
+        }
+        if (this.getTaille().getX() > c.getTaille().getX()) {
+            px++;
+        }
+        if (this.getTaille().getY() > c.getTaille().getY()) {
+            py++;
+        }
+
+        this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
+    }
+    
+    public boolean isAlive() {
+        boolean alivep = true;
+        if (this.health <= 0) {
+            System.out.println("isded");
+            alivep = false;
+        }
+        return alivep;
+    }
+
+    public boolean takeDommage(int force) {
+        this.health -= force;
+        return this.isAlive();
+    }
+    
+    public Creature getGoal() {
+        return this.goal;
+    }
+    
+    public Color getColor() {
+        return this.color;
+    }
+    
+    public String update(){
+        this.faim -= 0.5;
+        return null;
     }
 }

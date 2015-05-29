@@ -91,7 +91,6 @@ public class Canevas extends JPanel implements Scrollable {
     @Override
     public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
         //Get the current position.
-        System.out.println("Asdf");
         int currentPosition = 0;
         if (orientation == SwingConstants.HORIZONTAL) {
             currentPosition = visibleRect.x;
