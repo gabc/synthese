@@ -71,12 +71,16 @@ public class MonShit extends Animal {
 
     @Override
     public boolean canAttack(Creature c) {
-        if (!this.equals(c))
-            if (canSee(c) && getDistance(c) <= 1.5)
-                return true;
-            else {
-                goal = c;
-            }
+        if (this.equals(c))
+            return false;
+
+        if (c.isAnimal() == false)
+            return false;
+        if (canSee(c) && getDistance(c) <= 1.5)
+            return true;
+        else {
+            goal = c;
+        }
         return false;
     }
 
@@ -85,14 +89,18 @@ public class MonShit extends Animal {
         super.update();
         //        this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1);
         //        System.out.println(goal);
-        if (this.aggressivite() < 5)
+
+        if (this.aggressivite() < 4) {
+            if (goal instanceof DummyCreature)
+                return "wander";
             if (goal != null) {
-//                System.out.println("as a goal");
+                //                System.out.println("as a goal");
                 if (getDistance(goal) < 1.5)
                     return "attack";
                 return "goto";
             }
-//        System.out.println("wander");
+        }
+        //        System.out.println("wander");
         return "wander";
     }
 

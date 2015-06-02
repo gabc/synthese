@@ -1,16 +1,8 @@
 package synthesejava;
 
-import java.awt.Color;
-
-public class Foin extends Vegetal {
-    public Foin(int x, int y) {
-        super();
-        this.taille = new Taille(x, y);
-        this.health = 5;
-        this.color = new Color(218, 184, 16);
-        this.faim = 10;
-        this.maxFaim = 20;
-        this.reproductionCooldown = 10;
+public class DummyCreature extends Creature {
+    DummyCreature(Taille taille) {
+        this.taille = taille;
     }
 
     @Override
@@ -34,29 +26,16 @@ public class Foin extends Vegetal {
 
     @Override
     public boolean canReproduce() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean canReproduceWith(Creature c) {
-        if (c instanceof Foin && this.reproductionCooldown <= 0) {
-            return true;
-        } else
-            System.out.println("wat");
         return false;
     }
 
     @Override
     public Creature reproduceWith(Creature c) {
-        if(!(c instanceof Foin))
-            return null;
-        Foin o = (Foin)c;
-        Foin n = new Foin(this.taille.getX() + Utils.randInt(-1, 1), this.taille.getY() + Utils.randInt(-1, 1));
-        System.out.println("Testfoidn");
-        if (this.canReproduceWith(c)) {
-            this.reproductionCooldown = 20;
-            return n;
-        }
         return null;
     }
 
@@ -96,19 +75,10 @@ public class Foin extends Vegetal {
 
     @Override
     public Creature interactWith(Creature creature) {
-        if (creature.equals(this)) {
-            return null;
-        }
-        //System.out.println(this.getDistance(creature));
-        return reproduceWith(creature);
+        return null;
     }
 
     @Override
     public void showDNAChart() {
-    }
-
-    public String update() {
-        this.reproductionCooldown--;
-        return "reproduce";
     }
 }

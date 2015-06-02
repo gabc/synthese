@@ -4,16 +4,16 @@ import java.awt.Color;
 
 import java.util.Hashtable;
 
-public class Lapin extends Animal{
+public class Lapin extends Animal {
     private int force;
     private Hashtable<String, ChartData> dna;
-    
+
     public Lapin(int x, int y) {
         super();
         this.taille = new Taille(x, y);
         this.health = 20;
         this.force = 5;
-        this.color = new Color(123,123,123);
+        this.color = new Color(123, 123, 123);
         this.faim = 10;
         this.maxFaim = 20;
     }
@@ -25,7 +25,10 @@ public class Lapin extends Animal{
 
     @Override
     public boolean canAttack(Creature c) {
-        return false;
+        if (c.isAnimal())
+            return false;
+        else
+            return true;
     }
 
     @Override
@@ -64,7 +67,12 @@ public class Lapin extends Animal{
     @Override
     public String update() {
         super.update();
-        return "fuir";
+        if (this.faim < 5)
+            return "manger";
+        if(this.getGoal() instanceof Vegetal)
+            if(this.getDistance(this.goal) <= 1.5)
+                return "attack";
+        return "wander";
     }
 
     @Override

@@ -104,8 +104,6 @@ public class SyntheseFrame extends JFrame {
         b.add(clearAjout);
 
         this.liste = new CreatureList();
-        this.liste.add(new MonShit(0, 0));
-        this.liste.add(new Lapin(1, 4));
 
         this.getContentPane().add(b, BorderLayout.NORTH);
         this.getContentPane().add(jButton1, BorderLayout.SOUTH);
@@ -157,7 +155,6 @@ public class SyntheseFrame extends JFrame {
 
     private void mainLoop() {
         String action;
-        System.out.println(this.liste.size());
         CreatureList toAdd = new CreatureList();
         Iterator<Creature> cli = liste.iterator();
         while (cli.hasNext()) {
@@ -179,11 +176,15 @@ public class SyntheseFrame extends JFrame {
                     if (action.equals("attack")) {
                         if (c.canAttack(d)) {
                             c.attack(d);
+                            if(c == null)
+                                d.mange(10);
+                            else
+                                c.mange(10);
                         }
                     } else if (action.equals("reproduce")) {
                         temp = c.interactWith(d);
                         if (temp != null && !onOccupedSpace(temp, liste) && !onOccupedSpace(temp, toAdd) &&
-                            liste.size() < 20) {
+                            liste.size() < 200) {
                             toAdd.add(temp);
                         }
                     } else if (action.equals("goto")) {
@@ -195,12 +196,17 @@ public class SyntheseFrame extends JFrame {
                             d.setTaille(oldd);
                         }
                     } else if (action.equals("wander")) {
-                        c.canAttack(d);
-                        if (c.getGoal() == null)
-                            c.goTowards(new Taille(Utils.randInt(0, 1000), Utils.randInt(0, 1000)));
-                        else {
-                            c.goTowards(d);
+                        if (c.getGoal() == null) {
+                            c.setGoal(new DummyCreature(new Taille(Utils.randInt(c.getTaille().getX() - 5,
+                                                                                 c.getTaille().getX() + 5),
+                                                                   Utils.randInt(c.getTaille().getY() - 5,
+                                                                                 c.getTaille().getY() + 5))));
+                        } else {
+                            c.goTowards(c.getGoal());
                         }
+                    } else if (action.equals("manger")) {
+                        if(c.canAttack(d))
+                            c.setGoal(d);
                     } else if (action.equals("fuir")) {
                         c.goAwayFrom(d);
                     }
@@ -234,13 +240,14 @@ public class SyntheseFrame extends JFrame {
     public class PlayThread extends Thread {
         private boolean state;
         private int i;
+
         public PlayThread(int i) {
             state = false;
             this.i = i;
         }
 
         public synchronized void run() {
-            if(i == 1){
+            if (i == 1) {
                 i = 0;
                 state = true;
             }

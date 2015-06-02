@@ -1,5 +1,7 @@
 package synthesejava;
 
-public abstract class Vegetal extends Creature {
-    protected boolean isAnimal = false;
+public abstract class Vegetal extends Creature {    
+    protected Vegetal(){
+        isAnimal = false;
+    }
 }

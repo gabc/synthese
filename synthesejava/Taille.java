@@ -7,6 +7,10 @@ public class Taille {
     private int y;
 
     public Taille(int x, int y) {
+        if(x < 0)
+            x = 0;
+        if(y < 0)
+            y = 0;
         this.x = x;
         this.y = y;
         this.largeur = 1;

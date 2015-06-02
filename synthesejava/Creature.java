@@ -18,6 +18,7 @@ public abstract class Creature {
     Color color;
     double faim;
     double maxFaim;
+    int reproductionCooldown;
     
     public abstract int aggressivite();
 
@@ -63,7 +64,7 @@ public abstract class Creature {
 
     public void attack(Creature c) {
         if (!this.equals(c))
-            if(!c.takeDommage(this.hitPower()))
+            if (!c.takeDommage(this.hitPower()))
                 this.goal = null;
     }
 
@@ -87,10 +88,20 @@ public abstract class Creature {
         return taille;
     }
 
+    private int ilast = 0;
+
     public void goTowards(Creature c) {
-        if (getDistance(c) <= 1.5) {
+        if (getDistance(c) <= 1.5 && !this.equals(c)) {
             goal = null;
+            System.out.println("YAYE?!");
+            ilast = 0;
             return;
+        } else {
+            System.out.println("Still goin");
+            ilast++;
+
+            if (ilast > 10)
+                System.out.println(c);
         }
 
         int px = 0;
@@ -150,7 +161,7 @@ public abstract class Creature {
 
         this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
     }
-    
+
     public boolean isAlive() {
         boolean alivep = true;
         if (this.health <= 0) {
@@ -164,21 +175,35 @@ public abstract class Creature {
         this.health -= force;
         return this.isAlive();
     }
-    
+
     public Creature getGoal() {
         return this.goal;
     }
-    
+
+    public void setGoal(Creature c) {
+//        System.out.println(this.getClass().toString().equals(c.getClass().toString()));
+        if (this.equals(c))// || this.getClass().equals(c.getClass()))
+            this.goal = null;
+        else
+            this.goal = c;
+    }
+
     public Color getColor() {
         return this.color;
     }
-    
+
     public Taille position() {
         return this.taille;
     }
-    
-    public String update(){
+
+    public String update() {
         this.faim -= 0.5;
         return null;
+    }
+
+    void mange(int i) {
+        this.faim += i;
+        if(this.faim > this.maxFaim)
+            this.faim = this.maxFaim;
     }
 }
