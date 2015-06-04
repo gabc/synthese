@@ -37,7 +37,7 @@ public class Lapin extends Animal {
         if (c.isAnimal())
             return false;
         else {
-            if (this.faim > 5)
+            if (this.faim < 5)
                 return true;
             else
                 return false;
@@ -79,9 +79,14 @@ public class Lapin extends Animal {
     @Override
     public String update(CreatureList cl) {
         super.update(cl);
+        Creature c = null;
 
         if (this.goal == null)
             this.goal = this.findTarget(cl);
+
+        c = this.isTargeted(cl);
+        if (c != null)
+            this.goAwayFrom(c, cl);
 
         if (this.faim < 5 && !(this.goal instanceof DummyCreature)) {
             if (this.goal == null)

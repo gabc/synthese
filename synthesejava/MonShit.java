@@ -95,21 +95,30 @@ public class MonShit extends Animal {
     @Override
     public String update(CreatureList cl) {
         super.update(cl);
-        //        this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1);
-        //        System.out.println(goal);
 
-        if (this.aggressivite() < 4) {
-            if (goal instanceof DummyCreature)
-                return "wander";
-            if (goal != null) {
-                //                System.out.println("as a goal");
-                if (getDistance(goal) < 1.5)
-                    return "attack";
-                return "goto";
-            }
+        Creature c = null;
+
+        if (this.goal == null)
+            this.goal = this.findTarget(cl);
+
+        c = this.isTargeted(cl);
+        if (c != null)
+            this.goAwayFrom(c, cl);
+
+        if (this.faim < 5 && !(this.goal instanceof DummyCreature)) {
+            if (this.goal == null)
+                System.out.println("shit");
+            if (this.canAttack(this.goal))
+                this.attack(this.goal);
+            else
+                this.goTowards(this.goal, cl);
+        } else {
+            if (this.goal == null)
+                System.out.println("shit");
+            if (this.goTowards(this.goal, cl) && !(this.goal instanceof DummyCreature))
+                this.attack(this.goal);
         }
-        //        System.out.println("wander");
-        return "wander";
+        return null;
     }
 
     @Override

@@ -62,7 +62,10 @@ public abstract class Creature {
     }
 
     public boolean equals(Creature c) {
-        return this.taille.getX() == c.taille.getX() && this.taille.getY() == c.taille.getY() && this.getClass().equals(c.getClass());
+        if (c == null)
+            return false;
+        return this.taille.getX() == c.taille.getX() && this.taille.getY() == c.taille.getY() &&
+            this.getClass().equals(c.getClass());
     }
 
     public void attack(Creature c) {
@@ -140,7 +143,7 @@ public abstract class Creature {
         if (SyntheseFrame.onOccupedSpace(this, cl)) {
             System.out.println("Samespace");
             this.taille = t;
-            this.setGoal();
+            this.setGoal(this.findTarget(cl));
         }
         return false;
     }
@@ -164,7 +167,21 @@ public abstract class Creature {
         this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
     }
 
-    public void goAwayFrom(Creature c) {
+    public void goAwayFrom(Creature c, CreatureList cl) {
+        if (this.equals(c))
+            return;
+
+        if (getDistance(c) <= 1.5) {
+            ilast = 0;
+            if (this.getGoal() instanceof DummyCreature)
+                this.setGoal(null);
+            return;
+        } else {
+            ilast++;
+            if (ilast > 20)
+                System.out.println(c);
+        }
+
         int px = 0;
         int py = 0;
 
@@ -181,7 +198,14 @@ public abstract class Creature {
             py++;
         }
 
+        Taille t = null;
+        t = (Taille)this.taille.clone();
+
         this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
+        if (SyntheseFrame.onOccupedSpace(this, cl)) {
+            System.out.println("Samespace");
+            this.taille = t;
+        }
     }
 
     public boolean isAlive() {
@@ -210,9 +234,9 @@ public abstract class Creature {
     }
 
     public void setGoal() {
-        this.setGoal(new DummyCreature(new Taille(Utils.randInt(this.getTaille().getX() - 0,
+        this.setGoal(new DummyCreature(new Taille(Utils.randInt(this.getTaille().getX() - 1,
                                                                 this.getTaille().getX() + 1),
-                                                  Utils.randInt(this.getTaille().getY() - 0,
+                                                  Utils.randInt(this.getTaille().getY() - 1,
                                                                 this.getTaille().getY() + 1))));
     }
 
@@ -244,7 +268,7 @@ public abstract class Creature {
         cli = cl.listIterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
-            if (this.mightAttack(c)) {
+            if (this.mightAttack(c) && !this.equals(c) && !c.equals(this.getGoal())) {
                 /* if (this.canAttack(c))
                     return c; */
                 return c;
@@ -252,5 +276,17 @@ public abstract class Creature {
         }
         return new DummyCreature(new Taille(Utils.randInt(this.getTaille().getX() - 5, this.getTaille().getX() + 5),
                                             Utils.randInt(this.getTaille().getY() - 5, this.getTaille().getY() + 5)));
+    }
+
+    Creature isTargeted(CreatureList cl) {
+        Iterator<Creature> cli = cl.listIterator();
+        cli = cl.listIterator();
+        while (cli.hasNext()) {
+            Creature c = cli.next();
+            if (this.equals(c.getGoal())) {
+                return c;
+            }
+        }
+        return null;
     }
 }

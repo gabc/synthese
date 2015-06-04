@@ -225,7 +225,7 @@ public class SyntheseFrame extends JFrame {
                         }
                         break;
                     } else if (action.equals("fuir")) {
-                        c.goAwayFrom(d);
+                        c.goAwayFrom(d, liste);
                         break;
                     }
                 }
