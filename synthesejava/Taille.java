@@ -7,9 +7,9 @@ public class Taille {
     private int y;
 
     public Taille(int x, int y) {
-        if(x < 0)
+        if (x < 0)
             x = 0;
-        if(y < 0)
+        if (y < 0)
             y = 0;
         this.x = x;
         this.y = y;
@@ -23,19 +23,19 @@ public class Taille {
         this.largeur = largeur;
         this.hauteur = hauteur;
     }
-    
-    public Taille clone(){
-        return new Taille(this.x, this.y, this.hauteur, this.largeur);    
+
+    public Taille clone() {
+        return new Taille(this.x, this.y, this.hauteur, this.largeur);
     }
-    
+
     public double distance(Taille t) {
         return Math.sqrt(Math.pow(this.x - t.getX(), 2) + Math.pow(this.y - t.getY(), 2));
     }
 
-    public Boolean equals(Taille t) {
-        if (getX() == t.getX() && getY() == t.getY())
+    public boolean equals(Taille t) {
+        if ((getX() == t.getX()) && (getY() == t.getY())) {
             return true;
-        else
+        } else
             return false;
     }
 

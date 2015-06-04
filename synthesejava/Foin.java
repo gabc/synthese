@@ -110,7 +110,8 @@ public class Foin extends Vegetal {
     public void showDNAChart() {
     }
 
-    public String update() {
+    public String update(CreatureList cl) {
+        System.out.println(this.faim);
         this.reproductionCooldown--;
         return "reproduce";
     }

@@ -143,7 +143,7 @@ public class SyntheseFrame extends JFrame {
         Iterator<Creature> cli = cl.iterator();
         while (cli.hasNext()) {
             Creature t = cli.next();
-            if (c.getTaille().equals(t.getTaille())) {
+            if (c.getTaille().equals(t.getTaille()) && !c.equals(t)) {
                 return true;
             }
         }
@@ -177,7 +177,7 @@ public class SyntheseFrame extends JFrame {
         cli = liste.listIterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
-            if ((action = c.update()) != null) {
+            if ((action = c.update(liste)) != null) {
                 clj = liste.listIterator();
                 while (clj.hasNext()) {
                     Creature d = clj.next();

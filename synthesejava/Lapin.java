@@ -15,7 +15,7 @@ public class Lapin extends Animal {
         this.force = 5;
         this.color = new Color(123, 123, 123);
         this.faim = 10;
-        this.maxFaim = 10;
+        this.maxFaim = 20;
     }
 
     @Override
@@ -27,16 +27,21 @@ public class Lapin extends Animal {
     public boolean canAttack(Creature c) {
         if (c.isAnimal())
             return false;
-        else
+        else {
             return getDistance(c) <= 1.5;
+        }
     }
 
     @Override
     public boolean mightAttack(Creature c) {
         if (c.isAnimal())
             return false;
-        else
-            return true;
+        else {
+            if (this.faim > 5)
+                return true;
+            else
+                return false;
+        }
     }
 
     @Override
@@ -72,14 +77,26 @@ public class Lapin extends Animal {
     }
 
     @Override
-    public String update() {
-        super.update();
-        System.out.println("faim: " + this.faim);
-        if (this.getGoal() != null)
-                return "goto";
-        if (this.faim < 15)
-            return "manger";
-        return "wander";
+    public String update(CreatureList cl) {
+        super.update(cl);
+
+        if (this.goal == null)
+            this.goal = this.findTarget(cl);
+
+        if (this.faim < 5 && !(this.goal instanceof DummyCreature)) {
+            if (this.goal == null)
+                System.out.println("shit");
+            if (this.canAttack(this.goal))
+                this.attack(this.goal);
+            else
+                this.goTowards(this.goal, cl);
+        } else {
+            if (this.goal == null)
+                System.out.println("shit");
+            if (this.goTowards(this.goal, cl) && !(this.goal instanceof DummyCreature))
+                this.attack(this.goal);
+        }
+        return null;
     }
 
     @Override

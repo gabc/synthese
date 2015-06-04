@@ -93,8 +93,8 @@ public class MonShit extends Animal {
     }
 
     @Override
-    public String update() {
-        super.update();
+    public String update(CreatureList cl) {
+        super.update(cl);
         //        this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1);
         //        System.out.println(goal);
 
