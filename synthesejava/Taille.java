@@ -23,7 +23,11 @@ public class Taille {
         this.largeur = largeur;
         this.hauteur = hauteur;
     }
-
+    
+    public Taille clone(){
+        return new Taille(this.x, this.y, this.hauteur, this.largeur);    
+    }
+    
     public double distance(Taille t) {
         return Math.sqrt(Math.pow(this.x - t.getX(), 2) + Math.pow(this.y - t.getY(), 2));
     }

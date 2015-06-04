@@ -19,7 +19,7 @@ public abstract class Creature {
     double faim;
     double maxFaim;
     int reproductionCooldown;
-    
+
     public abstract int aggressivite();
 
     public abstract boolean canAttack(Creature c);
@@ -52,6 +52,8 @@ public abstract class Creature {
 
     public abstract void showDNAChart();
 
+    public abstract boolean mightAttack(Creature creature);
+
     public double getDistance(Creature c) {
         if (c == null)
             return 0;
@@ -64,8 +66,11 @@ public abstract class Creature {
 
     public void attack(Creature c) {
         if (!this.equals(c))
-            if (!c.takeDommage(this.hitPower()))
+            if (!c.takeDommage(this.hitPower())) {
+                System.out.println("Ymange");
+                this.mange(c.getFaim());
                 this.goal = null;
+            }
     }
 
     public boolean getIsCarnivore() {
@@ -90,16 +95,16 @@ public abstract class Creature {
 
     private int ilast = 0;
 
-    public void goTowards(Creature c) {
-        if (getDistance(c) <= 1.5 && !this.equals(c)) {
-            goal = null;
-            System.out.println("YAYE?!");
-            ilast = 0;
-            return;
-        } else {
-            System.out.println("Still goin");
-            ilast++;
+    /*
+    * Are we there yet?
+    */
 
+    public boolean goTowards(Creature c, CreatureList cl) {
+        if (getDistance(c) <= 1.5 && !this.equals(c)) {
+            ilast = 0;
+            return true;
+        } else {
+            ilast++;
             if (ilast > 10)
                 System.out.println(c);
         }
@@ -119,8 +124,16 @@ public abstract class Creature {
         if (this.getTaille().getY() > c.getTaille().getY()) {
             py--;
         }
+        Taille t = null;
+
+        t = (Taille)this.taille.clone();
 
         this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
+        if (!SyntheseFrame.onOccupedSpace(this, cl)) {
+            System.out.println("Samespace");
+            this.taille = t;
+        }
+        return false;
     }
 
     public void goTowards(Taille c) {
@@ -181,11 +194,15 @@ public abstract class Creature {
     }
 
     public void setGoal(Creature c) {
-//        System.out.println(this.getClass().toString().equals(c.getClass().toString()));
-        if (this.equals(c))// || this.getClass().equals(c.getClass()))
+        if (this.equals(c))
             this.goal = null;
         else
             this.goal = c;
+    }
+
+    public void setGoal() {
+        this.setGoal(new DummyCreature(new Taille(Utils.randInt(this.getTaille().getX() - 5, this.getTaille().getX() + 5),
+                                                  Utils.randInt(this.getTaille().getY() - 5, this.getTaille().getY() + 5))));
     }
 
     public Color getColor() {
@@ -201,9 +218,13 @@ public abstract class Creature {
         return null;
     }
 
-    void mange(int i) {
+    void mange(double i) {
         this.faim += i;
-        if(this.faim > this.maxFaim)
+        if (this.faim > this.maxFaim)
             this.faim = this.maxFaim;
+    }
+
+    double getFaim() {
+        return this.faim;
     }
 }

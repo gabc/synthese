@@ -52,7 +52,6 @@ public class SyntheseFrame extends JFrame {
     private JToggleButton clearAjout = new JToggleButton();
 
     private PlayThread playThread;
-    private PauseThread pauseThread;
 
     private boolean runningState;
     private JScrollPane scrollpane;
@@ -111,10 +110,8 @@ public class SyntheseFrame extends JFrame {
         this.add(this.scrollpane, BorderLayout.CENTER);
         this.scrollpane.repaint();
 
-        pauseThread = new PauseThread();
-        playThread = new PlayThread(1);
+        playThread = new PlayThread();
 
-        pauseThread.start();
         playThread.start();
 
         this.c.addMouseListener(new MouseAdapter() {
@@ -142,7 +139,7 @@ public class SyntheseFrame extends JFrame {
         });
     }
 
-    private Boolean onOccupedSpace(Creature c, CreatureList cl) {
+    public static boolean onOccupedSpace(Creature c, CreatureList cl) {
         Iterator<Creature> cli = cl.iterator();
         while (cli.hasNext()) {
             Creature t = cli.next();
@@ -151,6 +148,18 @@ public class SyntheseFrame extends JFrame {
             }
         }
         return false;
+    }
+
+    private Creature canFindToAttack(Creature c, CreatureList lst) {
+        Iterator<Creature> cli = lst.listIterator();
+        cli = lst.listIterator();
+        while (cli.hasNext()) {
+            Creature d = cli.next();
+            if (c.mightAttack(d)) {
+                return d;
+            }
+        }
+        return null;
     }
 
     private void mainLoop() {
@@ -176,39 +185,48 @@ public class SyntheseFrame extends JFrame {
                     if (action.equals("attack")) {
                         if (c.canAttack(d)) {
                             c.attack(d);
-                            if(c == null)
-                                d.mange(10);
-                            else
-                                c.mange(10);
                         }
+                        break;
                     } else if (action.equals("reproduce")) {
                         temp = c.interactWith(d);
                         if (temp != null && !onOccupedSpace(temp, liste) && !onOccupedSpace(temp, toAdd) &&
                             liste.size() < 200) {
                             toAdd.add(temp);
                         }
+                        break;
                     } else if (action.equals("goto")) {
                         Taille oldc = c.getTaille();
                         Taille oldd = d.getTaille();
-                        c.goTowards(d);
+                        c.goTowards(d, liste);
                         if (c.getDistance(d) == 0) {
                             c.setTaille(oldc);
                             d.setTaille(oldd);
                         }
+                        break;
                     } else if (action.equals("wander")) {
                         if (c.getGoal() == null) {
-                            c.setGoal(new DummyCreature(new Taille(Utils.randInt(c.getTaille().getX() - 5,
-                                                                                 c.getTaille().getX() + 5),
-                                                                   Utils.randInt(c.getTaille().getY() - 5,
-                                                                                 c.getTaille().getY() + 5))));
+                            c.setGoal();
                         } else {
-                            c.goTowards(c.getGoal());
+                            c.goTowards(c.getGoal(), liste);
                         }
+                        break;
                     } else if (action.equals("manger")) {
-                        if(c.canAttack(d))
-                            c.setGoal(d);
+                        System.out.println("goal: " + c.getGoal());
+                        if (c.getGoal() == null) {
+                            Creature f = canFindToAttack(c, liste);
+                            if (f == null)
+                                c.setGoal();
+                            else
+                                c.setGoal(f);
+                        } else {
+                            if (c.goTowards(c.getGoal(), liste))
+                                if (c.canAttack(d))
+                                    c.attack(d);
+                        }
+                        break;
                     } else if (action.equals("fuir")) {
                         c.goAwayFrom(d);
+                        break;
                     }
                 }
             }
@@ -222,15 +240,14 @@ public class SyntheseFrame extends JFrame {
         tick++;
     }
 
+
     protected class Ecouteur implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == jButton1) {
                 if (!runningState) {
-                    pauseThread.interrupt();
                     playThread.interrupt();
                 } else {
                     playThread.interrupt();
-                    pauseThread.interrupt();
                 }
                 runningState = !runningState;
             }
@@ -239,54 +256,27 @@ public class SyntheseFrame extends JFrame {
 
     public class PlayThread extends Thread {
         private boolean state;
-        private int i;
 
-        public PlayThread(int i) {
+        public PlayThread() {
             state = false;
-            this.i = i;
         }
 
         public synchronized void run() {
-            if (i == 1) {
-                i = 0;
-                state = true;
-            }
             while (true) {
                 try {
                     Thread.currentThread().sleep(400);
-
-                    while (state)
-                        wait();
                 } catch (InterruptedException e) {
                     System.out.println("playThread interupt");
                     state = !state;
                 }
-                mainLoop();
-            }
-        }
-    }
-
-    public class PauseThread extends Thread {
-        private boolean state;
-
-        public PauseThread() {
-            state = false;
-        }
-
-        public synchronized void run() {
-            while (true) {
-                try {
-                    Thread.currentThread().sleep(400);
-
-                    while (state)
-                        wait();
-                } catch (InterruptedException e) {
-                    System.out.println("PauseThread interupt");
-                    state = !state;
+                
+                if (state)
+                    mainLoop();
+                else {
+                    c.invalidate();
+                    c.repaint(liste);
+                    scrollpane.repaint();
                 }
-                c.invalidate();
-                c.repaint(liste);
-                scrollpane.repaint();
             }
         }
     }

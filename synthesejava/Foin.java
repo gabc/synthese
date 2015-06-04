@@ -24,6 +24,11 @@ public class Foin extends Vegetal {
     }
 
     @Override
+    public boolean mightAttack(Creature c) {
+        return false;
+    }
+
+    @Override
     public void statistiques() {
     }
 
@@ -41,18 +46,16 @@ public class Foin extends Vegetal {
     public boolean canReproduceWith(Creature c) {
         if (c instanceof Foin && this.reproductionCooldown <= 0) {
             return true;
-        } else
-            System.out.println("wat");
+        }
         return false;
     }
 
     @Override
     public Creature reproduceWith(Creature c) {
-        if(!(c instanceof Foin))
+        if (!(c instanceof Foin))
             return null;
         Foin o = (Foin)c;
         Foin n = new Foin(this.taille.getX() + Utils.randInt(-1, 1), this.taille.getY() + Utils.randInt(-1, 1));
-        System.out.println("Testfoidn");
         if (this.canReproduceWith(c)) {
             this.reproductionCooldown = 20;
             return n;

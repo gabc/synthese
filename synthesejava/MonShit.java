@@ -85,6 +85,14 @@ public class MonShit extends Animal {
     }
 
     @Override
+    public boolean mightAttack(Creature c) {
+        if (c.isAnimal())
+            return true;
+        else
+            return false;
+    }
+
+    @Override
     public String update() {
         super.update();
         //        this.taille.move(this.taille.getX() + 1, this.taille.getY() + 1);

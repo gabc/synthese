@@ -15,7 +15,7 @@ public class Lapin extends Animal {
         this.force = 5;
         this.color = new Color(123, 123, 123);
         this.faim = 10;
-        this.maxFaim = 20;
+        this.maxFaim = 10;
     }
 
     @Override
@@ -25,6 +25,14 @@ public class Lapin extends Animal {
 
     @Override
     public boolean canAttack(Creature c) {
+        if (c.isAnimal())
+            return false;
+        else
+            return getDistance(c) <= 1.5;
+    }
+
+    @Override
+    public boolean mightAttack(Creature c) {
         if (c.isAnimal())
             return false;
         else
@@ -49,8 +57,7 @@ public class Lapin extends Animal {
     public boolean canReproduceWith(Creature c) {
         if (c instanceof Lapin) {
             return true;
-        } else
-            System.out.println("wat lapin");
+        }
         return false;
     }
 
@@ -67,11 +74,11 @@ public class Lapin extends Animal {
     @Override
     public String update() {
         super.update();
-        if (this.faim < 5)
+        System.out.println("faim: " + this.faim);
+        if (this.getGoal() != null)
+                return "goto";
+        if (this.faim < 15)
             return "manger";
-        if(this.getGoal() instanceof Vegetal)
-            if(this.getDistance(this.goal) <= 1.5)
-                return "attack";
         return "wander";
     }
 
@@ -86,7 +93,7 @@ public class Lapin extends Animal {
 
     @Override
     public int hitPower() {
-        return 0;
+        return this.force;
     }
 
     @Override
