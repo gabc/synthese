@@ -2,7 +2,10 @@ package synthesejava;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Rectangle;
+
+import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -10,6 +13,7 @@ import java.util.Iterator;
 
 
 public abstract class Creature {
+    static int ID = 0;
     boolean isCarnivore;
     boolean isAnimal;
     int id;
@@ -20,6 +24,7 @@ public abstract class Creature {
     double faim;
     double maxFaim;
     int reproductionCooldown;
+    BufferedImage img;
 
     public abstract int aggressivite();
 
@@ -43,8 +48,6 @@ public abstract class Creature {
 
     public abstract int defence();
 
-    public abstract int getId();
-
     public abstract boolean isCarnivore();
 
     public abstract boolean isAnimal();
@@ -54,6 +57,12 @@ public abstract class Creature {
     public abstract void showDNAChart();
 
     public abstract boolean mightAttack(Creature creature);
+    
+    public abstract void updateDNA();
+
+    public Creature() {
+        this.id = ++Creature.ID;
+    }
 
     public double getDistance(Creature c) {
         if (c == null)
@@ -64,8 +73,7 @@ public abstract class Creature {
     public boolean equals(Creature c) {
         if (c == null)
             return false;
-        return this.taille.getX() == c.taille.getX() && this.taille.getY() == c.taille.getY() &&
-            this.getClass().equals(c.getClass());
+        return this.id == c.getId();
     }
 
     public void attack(Creature c) {
@@ -87,7 +95,7 @@ public abstract class Creature {
         return isAnimal;
     }
 
-    public int getId1() {
+    public int getId() {
         return id;
     }
 
@@ -170,17 +178,6 @@ public abstract class Creature {
     public void goAwayFrom(Creature c, CreatureList cl) {
         if (this.equals(c))
             return;
-
-        if (getDistance(c) <= 1.5) {
-            ilast = 0;
-            if (this.getGoal() instanceof DummyCreature)
-                this.setGoal(null);
-            return;
-        } else {
-            ilast++;
-            if (ilast > 20)
-                System.out.println(c);
-        }
 
         int px = 0;
         int py = 0;
@@ -288,5 +285,9 @@ public abstract class Creature {
             }
         }
         return null;
+    }
+
+    BufferedImage getImage() {
+        return this.img;
     }
 }

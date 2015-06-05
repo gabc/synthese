@@ -9,10 +9,12 @@ import java.util.ListIterator;
 
 public class CreatureList<T extends Creature> implements List, Iterable {
     private List<T> liste;
+    private List<T> toadd;
     
     public CreatureList() {
         super();
         this.liste = new ArrayList<T>();
+        this.toadd = new ArrayList<T>();
     }
 
     @Override
@@ -137,5 +139,15 @@ public class CreatureList<T extends Creature> implements List, Iterable {
         }
         System.out.println("wat " + x + " " + y);
         return null;
+    }
+    
+    public void append(Creature c){
+        this.toadd.add((T)c);
+    }
+    
+    public void update(){
+        if(toadd.size() > 0)
+            liste.addAll(toadd);
+        toadd.clear();
     }
 }

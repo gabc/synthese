@@ -35,23 +35,26 @@ public class Canevas extends JPanel implements Scrollable {
     public void paintComponent(Graphics g) {
         //        super.paintComponent(g);
 
-        paintLines(g);
-        if (cl == null)
-            return;
         Rectangle drawHere = g.getClipBounds();
 
         Graphics2D g2 = (Graphics2D)g.create();
-        
-//        g2.fillRect(drawHere.x, drawHere.y, drawHere.width, drawHere.height);
+        g2.setColor(new Color(255, 255, 255));
+        g2.fillRect(drawHere.x, drawHere.y, drawHere.width, drawHere.height);
+        if (cl == null) {
+            paintLines(g);
+            return;
+        }
+        //        g2.fillRect(drawHere.x, drawHere.y, drawHere.width, drawHere.height);
 
         Iterator<Creature> cli = this.cl.iterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
-            g2.setColor(c.getColor());
-            g2.fillRect(c.taille.getX() * sizeRect, c.taille.getY() * sizeRect,
-                        (int)c.getTaille().getLargeur() * sizeRect, (int)c.getTaille().getHauteur() * sizeRect);
+            //            g2.setColor(c.getColor());
+            //            g2.fillRect(c.taille.getX() * sizeRect, c.taille.getY() * sizeRect,
+            //                        (int)c.getTaille().getLargeur() * sizeRect, (int)c.getTaille().getHauteur() * sizeRect);
+            g2.drawImage(c.getImage(), null, c.getTaille().getX() * 20, c.getTaille().getY() * 20);
         }
-
+        paintLines(g);
     }
 
     void repaint(CreatureList cl) {
@@ -62,15 +65,14 @@ public class Canevas extends JPanel implements Scrollable {
     public void paintLines(Graphics g) {
         Graphics2D g2 = (Graphics2D)g.create();
         Rectangle drawHere = g.getClipBounds();
-        
-        g2.setColor(new Color(255, 255, 255));
-        g2.fillRect(drawHere.x, drawHere.y, drawHere.width, drawHere.height);
+
+
         g2.setColor(new Color(0, 0, 0));
-        
-        for (int i = 0; i < this.getHeight() + 1; i++) {
+
+        for (int i = 0; i < this.getHeight(); i++) {
             g2.drawLine(i * sizeRect, 0, i * sizeRect, this.getHeight() * sizeRect);
         }
-        for (int i = 0; i < this.getWidth() + 1; i++) {
+        for (int i = 0; i < this.getWidth(); i++) {
             g2.drawLine(0, i * sizeRect, this.getWidth() * sizeRect, i * sizeRect);
         }
     }
@@ -85,7 +87,7 @@ public class Canevas extends JPanel implements Scrollable {
 
     @Override
     public Dimension getPreferredScrollableViewportSize() {
-        return new Dimension(320, 480); //return super.getPreferredSize();
+        return new Dimension(SyntheseFrame.maxX * 20, SyntheseFrame.maxY * 20); //return super.getPreferredSize();
     }
 
     @Override
@@ -129,5 +131,11 @@ public class Canevas extends JPanel implements Scrollable {
 
     public void setMaxUnitIncrement(int pixels) {
         maxUnitIncrement = pixels;
+    }
+
+    public void setPreferredSize(Dimension d) {
+        d.setSize(d.width + 1, d.height + 1);
+        d.setSize(d.width * 20, d.height * 20);
+        super.setPreferredSize(d);
     }
 }

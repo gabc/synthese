@@ -86,4 +86,8 @@ public class DummyCreature extends Creature {
     public boolean mightAttack(Creature creature) {
         return false;
     }
+
+    @Override
+    public void updateDNA() {
+    }
 }

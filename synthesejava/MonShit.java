@@ -5,11 +5,16 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import java.io.File;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 public class MonShit extends Animal {
     private int force;
@@ -26,6 +31,12 @@ public class MonShit extends Animal {
         this.color = new Color(255, 0, 0);
         this.faim = 10;
         this.maxFaim = 20;
+        
+        try {
+            this.img = ImageIO.read(((new File("img/loup.jpg")).toURI()).toURL());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -141,11 +152,6 @@ public class MonShit extends Animal {
     }
 
     @Override
-    public int getId() {
-        return 0;
-    }
-
-    @Override
     public boolean isCarnivore() {
         return true;
     }
@@ -175,13 +181,14 @@ public class MonShit extends Animal {
 
     @Override
     public void showDNAChart() {
-        DNAGraph dc = new DNAGraph("MonTruc", dna);
+        DNAGraph dc = new DNAGraph("Loupidou", dna);
         dc.setSize(600, 400);
         dc.setLocationRelativeTo(null);
         dc.setVisible(true);
     }
 
     public void updateDNA() {
+        System.out.println("LOLOLOL");
         Iterator<Map.Entry<String, ChartData>> it = dna.entrySet().iterator();
 
         while (it.hasNext()) {

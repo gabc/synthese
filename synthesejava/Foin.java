@@ -2,6 +2,13 @@ package synthesejava;
 
 import java.awt.Color;
 
+import java.io.File;
+import java.io.IOException;
+
+import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+
 public class Foin extends Vegetal {
     public Foin(int x, int y) {
         super();
@@ -11,6 +18,11 @@ public class Foin extends Vegetal {
         this.faim = 10;
         this.maxFaim = 20;
         this.reproductionCooldown = 10;
+        try {
+            this.img = ImageIO.read(((new File("img/grass.jpg")).toURI()).toURL());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -83,11 +95,6 @@ public class Foin extends Vegetal {
     }
 
     @Override
-    public int getId() {
-        return 0;
-    }
-
-    @Override
     public boolean isCarnivore() {
         return false;
     }
@@ -111,8 +118,21 @@ public class Foin extends Vegetal {
     }
 
     public String update(CreatureList cl) {
-        System.out.println(this.faim);
         this.reproductionCooldown--;
-        return "reproduce";
+        if (this.reproductionCooldown <= 0) {
+            Iterator<Creature> cli = cl.listIterator();
+            cli = cl.listIterator();
+            while (cli.hasNext()) {
+                Creature c = cli.next();
+                c = this.reproduceWith(c);
+                if (c != null)
+                    cl.append(c);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void updateDNA() {
     }
 }

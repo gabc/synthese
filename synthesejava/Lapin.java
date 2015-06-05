@@ -2,7 +2,17 @@ package synthesejava;
 
 import java.awt.Color;
 
+import java.awt.Image;
+
+import java.awt.image.BufferedImage;
+
+import java.io.File;
+
+import java.io.IOException;
+
 import java.util.Hashtable;
+
+import javax.imageio.ImageIO;
 
 public class Lapin extends Animal {
     private int force;
@@ -16,6 +26,11 @@ public class Lapin extends Animal {
         this.color = new Color(123, 123, 123);
         this.faim = 10;
         this.maxFaim = 20;
+        try {
+            this.img = ImageIO.read(((new File("img/lapin.jpg")).toURI()).toURL());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -80,14 +95,16 @@ public class Lapin extends Animal {
     public String update(CreatureList cl) {
         super.update(cl);
         Creature c = null;
-
+        System.out.println(this.taille.getX());
         if (this.goal == null)
             this.goal = this.findTarget(cl);
 
         c = this.isTargeted(cl);
-        if (c != null)
+        if (c != null){
             this.goAwayFrom(c, cl);
-
+            return null;
+        }
+        
         if (this.faim < 5 && !(this.goal instanceof DummyCreature)) {
             if (this.goal == null)
                 System.out.println("shit");
@@ -124,11 +141,6 @@ public class Lapin extends Animal {
     }
 
     @Override
-    public int getId() {
-        return 0;
-    }
-
-    @Override
     public boolean isCarnivore() {
         return false;
     }
@@ -145,5 +157,9 @@ public class Lapin extends Animal {
 
     @Override
     public void showDNAChart() {
+    }
+
+    @Override
+    public void updateDNA() {
     }
 }

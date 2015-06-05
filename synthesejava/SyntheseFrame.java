@@ -58,6 +58,9 @@ public class SyntheseFrame extends JFrame {
     public static int tick = 0;
     private Dimension drawArea;
 
+    static public int maxX = 20;
+    static public int maxY = 20;
+
     public SyntheseFrame() {
         try {
             jbInit();
@@ -71,7 +74,7 @@ public class SyntheseFrame extends JFrame {
         this.drawArea = new Dimension(100, 100);
         ec = new Ecouteur();
         this.c = new Canevas();
-        this.c.setPreferredSize(new Dimension(1000, 1000));
+        this.c.setPreferredSize(new Dimension(SyntheseFrame.maxX, SyntheseFrame.maxY));
         this.scrollpane =
                 new JScrollPane(this.c, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.scrollpane.setPreferredSize(this.drawArea);
@@ -120,18 +123,18 @@ public class SyntheseFrame extends JFrame {
                 int y = e.getY() / SyntheseFrame.this.c.getSizeRect();
 
                 if (ajoutShit.isSelected()) {
-                    SyntheseFrame.this.liste.add(new MonShit(x, y));
+                    SyntheseFrame.this.liste.append(new MonShit(x, y));
                     return;
                 } else if (ajoutLapin.isSelected()) {
-                    SyntheseFrame.this.liste.add(new Lapin(x, y));
+                    SyntheseFrame.this.liste.append(new Lapin(x, y));
                     return;
                 } else if (ajoutFoin.isSelected()) {
-                    SyntheseFrame.this.liste.add(new Foin(x, y));
+                    SyntheseFrame.this.liste.append(new Foin(x, y));
                     return;
                 }
 
                 try {
-                    liste.getCreature(x, y).showDNAChart();
+                    liste.getCreature(x, y).updateDNA();
                 } catch (Exception ex) {
                     //                    System.out.println("Y'a rien la");
                 }
@@ -142,8 +145,8 @@ public class SyntheseFrame extends JFrame {
     public static boolean onOccupedSpace(Creature c, CreatureList cl) {
         Iterator<Creature> cli = cl.iterator();
         while (cli.hasNext()) {
-            Creature t = cli.next();
-            if (c.getTaille().equals(t.getTaille()) && !c.equals(t)) {
+            Creature c2 = cli.next();
+            if (c2.taille.getX() == c.taille.getX() && c2.taille.getY() == c.taille.getY() && !c.equals(c2)) {
                 return true;
             }
         }
@@ -163,8 +166,6 @@ public class SyntheseFrame extends JFrame {
     }
 
     private void mainLoop() {
-        String action;
-        CreatureList toAdd = new CreatureList();
         Iterator<Creature> cli = liste.iterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
@@ -173,66 +174,13 @@ public class SyntheseFrame extends JFrame {
             }
         }
 
-        Iterator<Creature> clj = liste.listIterator();
         cli = liste.listIterator();
         while (cli.hasNext()) {
             Creature c = cli.next();
-            if ((action = c.update(liste)) != null) {
-                clj = liste.listIterator();
-                while (clj.hasNext()) {
-                    Creature d = clj.next();
-                    Creature temp;
-                    if (action.equals("attack")) {
-                        if (c.canAttack(d)) {
-                            c.attack(d);
-                        }
-                        break;
-                    } else if (action.equals("reproduce")) {
-                        temp = c.interactWith(d);
-                        if (temp != null && !onOccupedSpace(temp, liste) && !onOccupedSpace(temp, toAdd) &&
-                            liste.size() < 200) {
-                            toAdd.add(temp);
-                        }
-                        break;
-                    } else if (action.equals("goto")) {
-                        Taille oldc = c.getTaille();
-                        Taille oldd = d.getTaille();
-                        c.goTowards(d, liste);
-                        if (c.getDistance(d) == 0) {
-                            c.setTaille(oldc);
-                            d.setTaille(oldd);
-                        }
-                        break;
-                    } else if (action.equals("wander")) {
-                        if (c.getGoal() == null) {
-                            c.setGoal();
-                        } else {
-                            c.goTowards(c.getGoal(), liste);
-                        }
-                        break;
-                    } else if (action.equals("manger")) {
-                        System.out.println("goal: " + c.getGoal());
-                        if (c.getGoal() == null) {
-                            Creature f = canFindToAttack(c, liste);
-                            if (f == null)
-                                c.setGoal();
-                            else
-                                c.setGoal(f);
-                        } else {
-                            if (c.goTowards(c.getGoal(), liste))
-                                if (c.canAttack(d))
-                                    c.attack(d);
-                        }
-                        break;
-                    } else if (action.equals("fuir")) {
-                        c.goAwayFrom(d, liste);
-                        break;
-                    }
-                }
-            }
+            c.update(liste);
         }
 
-        liste.addAll(toAdd);
+        liste.update();
         this.c.invalidate();
         this.c.repaint(liste);
 
@@ -269,11 +217,12 @@ public class SyntheseFrame extends JFrame {
                     System.out.println("playThread interupt");
                     state = !state;
                 }
-                
+
                 if (state)
                     mainLoop();
                 else {
                     c.invalidate();
+                    liste.update();
                     c.repaint(liste);
                     scrollpane.repaint();
                 }

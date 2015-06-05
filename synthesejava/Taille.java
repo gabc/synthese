@@ -11,6 +11,10 @@ public class Taille {
             x = 0;
         if (y < 0)
             y = 0;
+        if (x > SyntheseFrame.maxX)
+            x = SyntheseFrame.maxX;
+        if (y > SyntheseFrame.maxY)
+            y = SyntheseFrame.maxY;
         this.x = x;
         this.y = y;
         this.largeur = 1;
@@ -40,10 +44,18 @@ public class Taille {
     }
 
     public void move(int nx, int ny) {
-        if (nx >= 0)
-            this.x = nx;
-        if (ny >= 0)
-            this.y = ny;
+        this.x = nx;
+        this.y = ny;
+        
+        if (this.x <= 0)
+            this.x = 0;
+        if (this.y <= 0)
+            this.y = 0;
+        
+        if (this.x >= SyntheseFrame.maxX)
+            this.x = SyntheseFrame.maxX;
+        if (this.y >= SyntheseFrame.maxY)
+            this.y = SyntheseFrame.maxY;
     }
 
     public void setLargeur(int largeur) {
