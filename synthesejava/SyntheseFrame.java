@@ -134,7 +134,7 @@ public class SyntheseFrame extends JFrame {
                 }
 
                 try {
-                    liste.getCreature(x, y).updateDNA();
+                    liste.getCreature(x, y).changeDNA();
                 } catch (Exception ex) {
                     //                    System.out.println("Y'a rien la");
                 }

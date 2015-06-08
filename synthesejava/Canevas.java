@@ -22,7 +22,6 @@ import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
 public class Canevas extends JPanel implements Scrollable {
-    private BufferedImage buffer;
     private int sizeRect = 20;
     private CreatureList cl;
     private int maxUnitIncrement = 10;

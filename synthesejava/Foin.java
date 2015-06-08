@@ -133,6 +133,6 @@ public class Foin extends Vegetal {
     }
 
     @Override
-    public void updateDNA() {
+    public void changeDNA() {
     }
 }

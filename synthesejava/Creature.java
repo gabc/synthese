@@ -58,7 +58,7 @@ public abstract class Creature {
 
     public abstract boolean mightAttack(Creature creature);
     
-    public abstract void updateDNA();
+    public abstract void changeDNA();
 
     public Creature() {
         this.id = ++Creature.ID;

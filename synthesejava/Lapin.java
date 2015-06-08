@@ -2,6 +2,7 @@ package synthesejava;
 
 import java.awt.Color;
 
+import java.awt.Component;
 import java.awt.Image;
 
 import java.awt.image.BufferedImage;
@@ -13,6 +14,11 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
+
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Lapin extends Animal {
     private int force;
@@ -160,6 +166,37 @@ public class Lapin extends Animal {
     }
 
     @Override
-    public void updateDNA() {
+    public void changeDNA() {        
+        Hashtable<String, Component> t = new Hashtable<String, Component>();
+        JSpinner fspin = new JSpinner(new SpinnerNumberModel(this.faim, 0, 100, 0.5));
+        fspin.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSpinner mySpinner = (JSpinner)(e.getSource());
+                faim = Double.parseDouble(mySpinner.getValue().toString());
+            }
+        });
+        JSpinner forcespin = new JSpinner(new SpinnerNumberModel(this.force, 0, 100, 1));
+        forcespin.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSpinner mySpinner = (JSpinner)(e.getSource());
+                force = Integer.parseInt(mySpinner.getValue().toString());
+            }
+        });
+        JSpinner healths = new JSpinner(new SpinnerNumberModel(this.health, 0, 100, 1));
+        healths.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSpinner mySpinner = (JSpinner)(e.getSource());
+                health = Integer.parseInt(mySpinner.getValue().toString());
+            }
+        });
+        t.put("faim!", fspin);
+        t.put("force", forcespin);
+        t.put("health", healths);
+        DNAChanger dc = new DNAChanger(t);
+        dc.setSize(600, 400);
+        dc.setVisible(true);
     }
 }

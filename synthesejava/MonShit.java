@@ -1,6 +1,7 @@
 package synthesejava;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -16,6 +17,13 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import javax.swing.JButton;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 public class MonShit extends Animal {
     private int force;
     private Hashtable<String, ChartData> dna;
@@ -25,13 +33,10 @@ public class MonShit extends Animal {
         this.taille = new Taille(x, y);
         this.health = 40;
         this.force = 10;
-        dna = new Hashtable<String, ChartData>();
-        dna.put("force", new ChartData());
-        updateDNA();
         this.color = new Color(255, 0, 0);
         this.faim = 10;
         this.maxFaim = 20;
-        
+
         try {
             this.img = ImageIO.read(((new File("img/loup.jpg")).toURI()).toURL());
         } catch (IOException e) {
@@ -106,7 +111,7 @@ public class MonShit extends Animal {
     @Override
     public String update(CreatureList cl) {
         super.update(cl);
-
+        System.out.println(this.faim);
         Creature c = null;
 
         if (this.goal == null)
@@ -187,14 +192,38 @@ public class MonShit extends Animal {
         dc.setVisible(true);
     }
 
-    public void updateDNA() {
-        System.out.println("LOLOLOL");
-        Iterator<Map.Entry<String, ChartData>> it = dna.entrySet().iterator();
-
-        while (it.hasNext()) {
-            Map.Entry<String, ChartData> entry = it.next();
-            entry.getValue().append(SyntheseFrame.tick, force);
-        }
+    public void changeDNA() {
+        Hashtable<String, Component> t = new Hashtable<String, Component>();
+        JSpinner fspin = new JSpinner(new SpinnerNumberModel(this.faim, 0, 100, 0.5));
+        fspin.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSpinner mySpinner = (JSpinner)(e.getSource());
+                faim = Double.parseDouble(mySpinner.getValue().toString());
+            }
+        });
+        JSpinner forcespin = new JSpinner(new SpinnerNumberModel(this.force, 0, 100, 1));
+        forcespin.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSpinner mySpinner = (JSpinner)(e.getSource());
+                force = Integer.parseInt(mySpinner.getValue().toString());
+            }
+        });
+        JSpinner healths = new JSpinner(new SpinnerNumberModel(this.health, 0, 100, 1));
+        healths.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSpinner mySpinner = (JSpinner)(e.getSource());
+                health = Integer.parseInt(mySpinner.getValue().toString());
+            }
+        });
+        t.put("faim!", fspin);
+        t.put("force", forcespin);
+        t.put("health", healths);
+        DNAChanger dc = new DNAChanger(t);
+        dc.setSize(600, 400);
+        dc.setVisible(true);
     }
 
     public void setHealth(int health) {

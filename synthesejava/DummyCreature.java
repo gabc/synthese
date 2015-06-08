@@ -88,6 +88,6 @@ public class DummyCreature extends Creature {
     }
 
     @Override
-    public void updateDNA() {
+    public void changeDNA() {
     }
 }
