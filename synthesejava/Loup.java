@@ -24,11 +24,11 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class MonShit extends Animal {
+public class Loup extends Animal {
     private int force;
     private Hashtable<String, ChartData> dna;
 
-    public MonShit(int x, int y) {
+    public Loup(int x, int y) {
         super();
         this.taille = new Taille(x, y);
         this.health = 40;
@@ -67,7 +67,7 @@ public class MonShit extends Animal {
 
     @Override
     public boolean canReproduceWith(Creature c) {
-        if (c instanceof MonShit) {
+        if (c instanceof Loup) {
             return true;
         } else
             System.out.println("wat");
@@ -76,8 +76,8 @@ public class MonShit extends Animal {
 
     @Override
     public Creature reproduceWith(Creature c) {
-        MonShit o = (MonShit)c;
-        MonShit n = new MonShit(this.taille.getX() + 1, this.taille.getY());
+        Loup o = (Loup)c;
+        Loup n = new Loup(this.taille.getX() + 1, this.taille.getY());
         if (this.canReproduceWith(c)) {
             n.setForce((this.force + o.getForce()) / 2);
             return n;

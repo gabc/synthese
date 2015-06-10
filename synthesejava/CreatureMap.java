@@ -5,13 +5,13 @@ public class CreatureMap {
     private int maxw;
     private int maxh;
 
-    public CreatureMap(int h, int w) {
+    public CreatureMap(int w, int h) {
         map = new Creature[h][w];
         this.maxw = w;
         this.maxh = h;
     }
 
-    public void insert(Creature c, int h, int w) {
+    public void insert(Creature c, int w, int h) {
         if (w < 0)
             w = 0;
         if (h < 0)
@@ -27,7 +27,7 @@ public class CreatureMap {
             map[h][w] = c;
     }
 
-    public void update(Creature c, int h, int w) {
+    public void update(Creature c, int w, int h) {
         if (w < 0)
             w = 0;
         if (h < 0)
@@ -40,11 +40,11 @@ public class CreatureMap {
         map[h][w] = c;
     }
 
-    public Creature get(int h, int w) {
+    public Creature get(int w, int h) {
         return map[h][w];
     }
 
-    public CreatureList getAround(int h, int w, int range) {
+    public CreatureList getAround(int w, int h, int range) {
         CreatureList cl = new CreatureList();
 
         if (w < 0)

@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridBagLayoutInfo;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
 
@@ -32,6 +33,8 @@ import java.util.Random;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.imageio.ImageIO;
+
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -51,7 +54,6 @@ public class SyntheseFrame extends JFrame {
     private Ecouteur ec;
     private Canevas c;
     private MiniMap minimap;
-    private DNAChanger dc;
     private JButton jButton1 = new JButton();
     private JToggleButton ajoutLapin = new JToggleButton();
     private JToggleButton ajoutShit = new JToggleButton();
@@ -77,9 +79,6 @@ public class SyntheseFrame extends JFrame {
     }
 
     private void jbInit() throws Exception {
-        /* this.setLayout(new GridBagLayout());
-        GridBagConstraints gridConst = new GridBagConstraints(); */
-
         this.setTitle("Synthese");
         this.drawArea = new Dimension(100, 100);
         ec = new Ecouteur();
@@ -118,35 +117,16 @@ public class SyntheseFrame extends JFrame {
 
         this.liste = new CreatureList();
 
-        /* gridConst.fill = GridBagConstraints.BOTH;
-        gridConst.anchor = GridBagConstraints.PAGE_START;
-//        gridConst.insets = new Insets(0,-100,0,0);  //top padding
-        gridConst.gridx = 0;
-        gridConst.gridy = 0; */
         this.getContentPane().add(b, BorderLayout.NORTH);
 
-        /* gridConst.gridx = 0;
-        gridConst.gridy = 1;
-        gridConst.anchor = GridBagConstraints.CENTER;
-        gridConst.fill = GridBagConstraints.BOTH; */
         this.add(this.scrollpane, BorderLayout.CENTER);
 
         JPanel botPan = new JPanel(new FlowLayout());
         botPan.add(jButton1);
         botPan.add(this.minimap);
-        /*  gridConst.fill = GridBagConstraints.HORIZONTAL;
-        //        gridConst.ipady = 0;
-        //        gridConst.weighty = 1.0;
-         gridConst.gridx = 0;
-         gridConst.gridy = 2;
-         gridConst.anchor = GridBagConstraints.PAGE_END; */
+
         this.getContentPane().add(botPan, BorderLayout.SOUTH);
 
-        /* gridConst.gridx = 1;
-        gridConst.gridy = 2;
-        gridConst.anchor = GridBagConstraints.PAGE_END;
-        gridConst.insets = new Insets(5, 5, 0, 0); */
-        //        this.add(this.minimap, BorderLayout.SOUTH);
         this.scrollpane.repaint();
 
         playThread = new PlayThread();
@@ -164,21 +144,33 @@ public class SyntheseFrame extends JFrame {
                     return;
                 }
 
+                if (SwingUtilities.isMiddleMouseButton(e)) {
+                    SyntheseFrame.this.clear();
+                    return;
+                }
+
+                Creature c;
                 if (ajoutShit.isSelected()) {
-                    SyntheseFrame.this.liste.append(new MonShit(x, y));
+                    c = new Loup(x, y);
+                    SyntheseFrame.this.liste.append(c);
+                    map.insert(c, x, y);
                     return;
                 } else if (ajoutLapin.isSelected()) {
-                    SyntheseFrame.this.liste.append(new Lapin(x, y));
+                    c = new Lapin(x, y);
+                    SyntheseFrame.this.liste.append(c);
+                    map.insert(c, x, y);
                     return;
                 } else if (ajoutFoin.isSelected()) {
-                    SyntheseFrame.this.liste.append(new Foin(x, y));
+                    c = new Foin(x, y);
+                    SyntheseFrame.this.liste.append(c);
+                    map.insert(c, x, y);
                     return;
                 }
 
                 try {
                     liste.getCreature(x, y).changeDNA();
                 } catch (Exception ex) {
-                    System.out.println("Y'a rien la");
+
                 }
             }
         });
@@ -187,11 +179,31 @@ public class SyntheseFrame extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 int x = e.getX() / 3;
                 int y = e.getY() / 3;
-                
-                scrollpane.getHorizontalScrollBar().setValue(x * 20);
-                scrollpane.getVerticalScrollBar().setValue(y * 20);
+
+                scrollpane.getHorizontalScrollBar().setValue((x * 20) - c.getVisibleRect().width / 2);
+                scrollpane.getVerticalScrollBar().setValue((y * 20) - c.getVisibleRect().height / 2);
             }
         });
+    }
+
+    public void clear() {
+        JPanel contentPane = (JPanel)this.getContentPane();
+
+        contentPane.removeAll();
+        contentPane.add(new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Image img = null;
+                try {
+                    img = ImageIO.read(((new File("img/oops.png")).toURI()).toURL());
+                } catch (IOException e) {
+                    System.out.println("non");
+                }
+                g.drawImage(img, 0, 0, null);
+            }
+        });
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public static boolean onOccupedSpace(Creature c, CreatureList cl) {
@@ -286,7 +298,7 @@ public class SyntheseFrame extends JFrame {
     public static void main(String[] args) {
         SyntheseFrame frame = new SyntheseFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
+        frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
         frame.setVisible(true);
