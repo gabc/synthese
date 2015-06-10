@@ -59,7 +59,7 @@ public class CreatureList<T extends Creature> implements List, Iterable {
 
     @Override
     public boolean remove(Object o) {
-        return false;
+        return this.liste.remove(o);
     }
 
     @Override

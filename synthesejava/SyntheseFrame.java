@@ -4,8 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridBagLayoutInfo;
+import java.awt.Insets;
 import java.awt.Rectangle;
 
 import java.awt.event.ActionEvent;
@@ -42,8 +47,10 @@ import javax.swing.SwingWorker;
 
 public class SyntheseFrame extends JFrame {
     public CreatureList liste;
+    public CreatureMap map;
     private Ecouteur ec;
     private Canevas c;
+    private MiniMap minimap;
     private DNAChanger dc;
     private JButton jButton1 = new JButton();
     private JToggleButton ajoutLapin = new JToggleButton();
@@ -58,8 +65,8 @@ public class SyntheseFrame extends JFrame {
     public static int tick = 0;
     private Dimension drawArea;
 
-    static public int maxX = 20;
-    static public int maxY = 20;
+    static public int maxX = 50;
+    static public int maxY = 50;
 
     public SyntheseFrame() {
         try {
@@ -70,6 +77,9 @@ public class SyntheseFrame extends JFrame {
     }
 
     private void jbInit() throws Exception {
+        /* this.setLayout(new GridBagLayout());
+        GridBagConstraints gridConst = new GridBagConstraints(); */
+
         this.setTitle("Synthese");
         this.drawArea = new Dimension(100, 100);
         ec = new Ecouteur();
@@ -79,6 +89,7 @@ public class SyntheseFrame extends JFrame {
                 new JScrollPane(this.c, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.scrollpane.setPreferredSize(this.drawArea);
 
+        this.minimap = new MiniMap(SyntheseFrame.maxX, SyntheseFrame.maxY);
         jButton1.setText("go");
         jButton1.addActionListener(ec);
 
@@ -107,10 +118,35 @@ public class SyntheseFrame extends JFrame {
 
         this.liste = new CreatureList();
 
+        /* gridConst.fill = GridBagConstraints.BOTH;
+        gridConst.anchor = GridBagConstraints.PAGE_START;
+//        gridConst.insets = new Insets(0,-100,0,0);  //top padding
+        gridConst.gridx = 0;
+        gridConst.gridy = 0; */
         this.getContentPane().add(b, BorderLayout.NORTH);
-        this.getContentPane().add(jButton1, BorderLayout.SOUTH);
 
+        /* gridConst.gridx = 0;
+        gridConst.gridy = 1;
+        gridConst.anchor = GridBagConstraints.CENTER;
+        gridConst.fill = GridBagConstraints.BOTH; */
         this.add(this.scrollpane, BorderLayout.CENTER);
+
+        JPanel botPan = new JPanel(new FlowLayout());
+        botPan.add(jButton1);
+        botPan.add(this.minimap);
+        /*  gridConst.fill = GridBagConstraints.HORIZONTAL;
+        //        gridConst.ipady = 0;
+        //        gridConst.weighty = 1.0;
+         gridConst.gridx = 0;
+         gridConst.gridy = 2;
+         gridConst.anchor = GridBagConstraints.PAGE_END; */
+        this.getContentPane().add(botPan, BorderLayout.SOUTH);
+
+        /* gridConst.gridx = 1;
+        gridConst.gridy = 2;
+        gridConst.anchor = GridBagConstraints.PAGE_END;
+        gridConst.insets = new Insets(5, 5, 0, 0); */
+        //        this.add(this.minimap, BorderLayout.SOUTH);
         this.scrollpane.repaint();
 
         playThread = new PlayThread();
@@ -121,6 +157,12 @@ public class SyntheseFrame extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 int x = e.getX() / SyntheseFrame.this.c.getSizeRect();
                 int y = e.getY() / SyntheseFrame.this.c.getSizeRect();
+
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    Creature c = liste.getCreature(x, y);
+                    liste.remove(c);
+                    return;
+                }
 
                 if (ajoutShit.isSelected()) {
                     SyntheseFrame.this.liste.append(new MonShit(x, y));
@@ -136,8 +178,18 @@ public class SyntheseFrame extends JFrame {
                 try {
                     liste.getCreature(x, y).changeDNA();
                 } catch (Exception ex) {
-                    //                    System.out.println("Y'a rien la");
+                    System.out.println("Y'a rien la");
                 }
+            }
+        });
+
+        this.minimap.addMouseListener(new MouseAdapter() {
+            public void mouseReleased(MouseEvent e) {
+                int x = e.getX() / 3;
+                int y = e.getY() / 3;
+                
+                scrollpane.getHorizontalScrollBar().setValue(x * 20);
+                scrollpane.getVerticalScrollBar().setValue(y * 20);
             }
         });
     }
@@ -183,7 +235,7 @@ public class SyntheseFrame extends JFrame {
         liste.update();
         this.c.invalidate();
         this.c.repaint(liste);
-
+        this.minimap.repaint(liste, scrollpane.getViewport().getBounds());
         this.scrollpane.repaint();
         tick++;
     }
@@ -225,6 +277,7 @@ public class SyntheseFrame extends JFrame {
                     liste.update();
                     c.repaint(liste);
                     scrollpane.repaint();
+                    minimap.repaint(liste, c.getVisibleRect());
                 }
             }
         }
