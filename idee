@@ -1,0 +1,164 @@
+IMPORTANT:
+	VIRTUAL METHODS.
+	FUCKING C++
+
+* Avoir un framework pour les bebites.
+	Fonctionnant par DLL/.so
+	Avec une interface définie.
+	QDir/QFile
+
+* Main loop
+	A chaque tick.
+	
+	Update les bebittes.
+		update(void);
+	Update les stats.
+		Le nombre de chaque bebitte.
+		Les avancements des dna?
+	Update la vue.
+
+
+* Data structure
+	Tenir une liste de tout les trucs sur la carte.
+	Passer au travers et caller une fonction (a définir)
+	pour qu'elle aie sont tour.
+	L'avoir publique, pour que le truc puisse voir autour.
+	(Probablement O(n²), ce qui est moche)
+
+	Eg:
+	doStuff():
+		seen = canSee(listOfAllStuff);
+		for t in seen:
+			if t can killme:
+				gtfo
+		...
+
+	Avoir une liste contenant, l'id de l'objet (compteur de 0 a N).
+	Contenant, l'id. Et le pointeur vers la fonction 'construct'.
+	Quand on fera un nouveau objet ce de type, on callera cette fonction.
+	
+
+* Les comportements
+** Vue
+	Premierement, il est important d'avoir un champ
+	de vision pour chaque bebite.
+** Faim
+	Chaque n tick, la faim descend.
+	Et l'envie de manger monte.
+** Sommeil
+	Voir faim.
+** Déterminer le threat d'un autre.
+	En gros, comme chaque bebite est de son cote.
+	Y'a pas moyen d'avoir un lien direct.
+	Il va falloir faire avec un heuristique.
+
+	Par exemple, avoir une comparaison, avec la taille.
+	La grosseur.
+	La vitesse.
+	etc.
+	Si ça entre dans une certaine mesure, le truc est safe.
+
+** Combat
+** Reproduction
+	
+* Chaine alimentaire
+	Un truc dynamique.
+	Chaque bebite, va apprendre s'il peut manger un autre.
+	Ou pas.
+	Avoir un graphique, montrant les liens.	
+
+
+* scratch
+
+Probleme a résoudre:
+** Undone
+	Combat.
+	Je fais comment?
+	J'ai une méthode qui fait le combat entre les deux.
+	
+	attaque(Creature *c1, Creature *c2)
+		until(c1->giveUp || c2->giveUp)
+			if(c1->wantToAttack(c2))
+				c1->attacks(c2);
+			if(c2->wantToAttack(c1))
+				c2->attacks(c1);
+** Done
+	[id, handler, nom, fonction_construct-thingey]
+
+** Undone
+	Interface.
+	J'expose quoi?
+
+	J'ai une fonction qui crée un nouvel objet.
+	J'ai une méthode pour chaque tour.
+	
+	Je fais comment pour les stats?
+	Je fais comment pour l'historique?
+
+	Chaque type, devrait avoir un historique de ce qu'il s'est passé.
+	Comment y avoir acces?
+
+	Avoir une variable publique contenant l'id de l'objet.
+	Pour chaque objet.
+	C'est moche, mais va permet de sauver beaucoup de marde.
+	L'avoir statique. Setter lors de la création.
+
+** Done
+	Chaque classe va avoir une méthode qui va retourner un graph de Qt.
+	Chaque classe va calculer les diff eux-meme.
+	Chaque classe va avoir un static contenant l'historique.
+	Chaque classe contenant un graph.
+	http://doc.qt.io/QtCharts/qtcharts-linechart-example.html
+
+	La méthode retourne un QChartView. Pis c'est chill :D
+	(J'espere que c'est pas une autre demi-feature)
+
+** Done
+	QObject -> VivantThing -> Plante -> Stuff
+			\_> Animal -> Stuff
+	for( auto *i : vivantLst )...
+
+** Done
+	Comment gerer un nombre arbitraire d'objets différents.
+	Comment etre capable d'avoir des intéractions entre eux.
+	QMetaObject est pas ce que je veux.
+	Juste un pointeur sur un objet.
+	Creation d'un premier stuff.
+	Retirer un stuff.
+
+	Avoir une fonction qui te génere un nouvel objets de ce type.
+	Avec les meta-objets, appeller les bonnes methodes.
+
+	QList.
+
+	Genre:
+	for(i = 0; i < ALLTHING.size(); i++){
+		ALLTHING[i].doThing();
+		/* Ou bien */
+		QMetaObject::invokeMethod(ALLTHING[i], "doThing");
+		
+	Un truc du genre devrait marcher.
+	Parce que la lib est loadé en mémoire au complet.
+	Donc, j'imagine que l'objet a acces a ses méthodes.
+	J'imagine.
+
+	void accouple(Vivant *a, Vivant *b){
+		if(!a->canReproduce() && !a->inDickRangeOf(b) && !b->canReproduceWith(a))
+			return NULL;
+		Vivant *stuff;
+
+		stuff = a->reproduitWith(b);
+
+		ajouteNouveauTruc(stuff);
+	}
+**
+
+Cosntante statique.
+pour gerer la bouffe.
+L'un peut manger l'autre, bref as irl.
+
+Creature::HOMNIVORE
+Creature::CARNIVORE
+Creature::VEGETARIEN
+Creature::PLANTE
+Creature::ANIMAL
