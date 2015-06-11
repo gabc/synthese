@@ -6,6 +6,8 @@ public class CreatureMap {
     private int maxh;
 
     public CreatureMap(int w, int h) {
+        w += 1;
+        h += 1;
         map = new Creature[h][w];
         this.maxw = w;
         this.maxh = h;
@@ -45,7 +47,7 @@ public class CreatureMap {
     }
 
     public CreatureList getAround(int w, int h, int range) {
-        CreatureList cl = new CreatureList();
+        CreatureList cl = new CreatureList(null);
 
         if (w < 0)
             w = 0;

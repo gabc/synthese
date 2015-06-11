@@ -10,11 +10,20 @@ import java.util.ListIterator;
 public class CreatureList<T extends Creature> implements List, Iterable {
     private List<T> liste;
     private List<T> toadd;
+    private CreatureMap map;
     
-    public CreatureList() {
+    public CreatureList(CreatureMap map) {
         super();
         this.liste = new ArrayList<T>();
         this.toadd = new ArrayList<T>();
+        this.map = map;
+    }
+    
+    public boolean onOccupedSpace(T c){
+        if(map.get(c.getTaille().getX(), c.getTaille().getY()) == null){
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -143,6 +152,7 @@ public class CreatureList<T extends Creature> implements List, Iterable {
     
     public void append(Creature c){
         this.toadd.add((T)c);
+        map.insert(c, c.getTaille().getX(), c.getTaille().getY());
     }
     
     public void update(){

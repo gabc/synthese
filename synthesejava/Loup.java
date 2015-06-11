@@ -26,7 +26,6 @@ import javax.swing.event.ChangeListener;
 
 public class Loup extends Animal {
     private int force;
-    private Hashtable<String, ChartData> dna;
 
     public Loup(int x, int y) {
         super();
@@ -67,19 +66,19 @@ public class Loup extends Animal {
 
     @Override
     public boolean canReproduceWith(Creature c) {
-        if (c instanceof Loup) {
+        if (c instanceof Loup && c.reproductionCooldown <= 0 && this.getDistance(c) <= 1.5) {
             return true;
         } else
-            System.out.println("wat");
-        return false;
+            return false;
     }
 
     @Override
     public Creature reproduceWith(Creature c) {
-        Loup o = (Loup)c;
-        Loup n = new Loup(this.taille.getX() + 1, this.taille.getY());
+        if (!(c instanceof Loup)) {
+            return null;
+        }
+        Loup n = new Loup(this.taille.getX() + Utils.randInt(-1, +1), this.taille.getY() + Utils.randInt(-1, +1));
         if (this.canReproduceWith(c)) {
-            n.setForce((this.force + o.getForce()) / 2);
             return n;
         }
         return null;
@@ -92,6 +91,7 @@ public class Loup extends Animal {
 
         if (c.isAnimal() == false)
             return false;
+
         if (canSee(c) && getDistance(c) <= 1.5)
             return true;
         else {
@@ -102,6 +102,9 @@ public class Loup extends Animal {
 
     @Override
     public boolean mightAttack(Creature c) {
+        if (c instanceof Loup) {
+            return false;
+        }
         if (c.isAnimal())
             return true;
         else
@@ -111,7 +114,7 @@ public class Loup extends Animal {
     @Override
     public String update(CreatureList cl) {
         super.update(cl);
-        System.out.println(this.faim);
+        this.reproductionCooldown--;
         Creature c = null;
 
         if (this.goal == null)
@@ -122,17 +125,27 @@ public class Loup extends Animal {
             this.goAwayFrom(c, cl);
 
         if (this.faim < 5 && !(this.goal instanceof DummyCreature)) {
-            if (this.goal == null)
-                System.out.println("shit");
             if (this.canAttack(this.goal))
                 this.attack(this.goal);
             else
                 this.goTowards(this.goal, cl);
         } else {
-            if (this.goal == null)
-                System.out.println("shit");
             if (this.goTowards(this.goal, cl) && !(this.goal instanceof DummyCreature))
                 this.attack(this.goal);
+        }
+
+        if (this.reproductionCooldown <= 0) {
+            Iterator<Creature> cli = cl.listIterator();
+            cli = cl.listIterator();
+            while (cli.hasNext()) {
+                c = cli.next();
+                Creature nc = this.reproduceWith(c);
+                if (nc != null && cl.onOccupedSpace(nc)) {
+                    cl.append(nc);
+                    this.setReproductionCooldown(15);
+                    c.setReproductionCooldown(15);
+                }
+            }
         }
         return null;
     }
@@ -166,10 +179,6 @@ public class Loup extends Animal {
         return true;
     }
 
-    public void construct() {
-        System.out.println("LOLILOL");
-    }
-
     @Override
     public Creature interactWith(Creature creature) {
         if (creature.equals(this)) {
@@ -182,14 +191,6 @@ public class Loup extends Animal {
         } else {
             // go towards
         } */
-    }
-
-    @Override
-    public void showDNAChart() {
-        DNAGraph dc = new DNAGraph("Loupidou", dna);
-        dc.setSize(600, 400);
-        dc.setLocationRelativeTo(null);
-        dc.setVisible(true);
     }
 
     public void changeDNA() {

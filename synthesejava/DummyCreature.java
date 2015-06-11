@@ -79,10 +79,6 @@ public class DummyCreature extends Creature {
     }
 
     @Override
-    public void showDNAChart() {
-    }
-
-    @Override
     public boolean mightAttack(Creature creature) {
         return false;
     }

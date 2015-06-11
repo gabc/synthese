@@ -13,6 +13,8 @@ import java.io.IOException;
 
 import java.util.Hashtable;
 
+import java.util.Iterator;
+
 import javax.imageio.ImageIO;
 
 import javax.swing.JSpinner;
@@ -22,13 +24,12 @@ import javax.swing.event.ChangeListener;
 
 public class Lapin extends Animal {
     private int force;
-    private Hashtable<String, ChartData> dna;
 
     public Lapin(int x, int y) {
         super();
         this.taille = new Taille(x, y);
         this.health = 20;
-        this.force = 5;
+        this.force = 15;
         this.color = new Color(123, 123, 123);
         this.faim = 10;
         this.maxFaim = 20;
@@ -81,7 +82,7 @@ public class Lapin extends Animal {
 
     @Override
     public boolean canReproduceWith(Creature c) {
-        if (c instanceof Lapin) {
+        if (c instanceof Lapin && c.reproductionCooldown <= 0 && this.getDistance(c) <= 1.5) {
             return true;
         }
         return false;
@@ -89,8 +90,11 @@ public class Lapin extends Animal {
 
     @Override
     public Creature reproduceWith(Creature c) {
+        if(!(c instanceof Lapin)){
+            return null;
+        }
         Lapin o = (Lapin)c;
-        Lapin n = new Lapin(this.taille.getX() + 1, this.taille.getY());
+        Lapin n = new Lapin(this.taille.getX() + Utils.randInt(-1, +1), this.taille.getY() + Utils.randInt(-1, +1));
         if (this.canReproduceWith(c)) {
             return n;
         }
@@ -100,17 +104,18 @@ public class Lapin extends Animal {
     @Override
     public String update(CreatureList cl) {
         super.update(cl);
+        this.reproductionCooldown--;
         Creature c = null;
         System.out.println(this.taille.getX());
         if (this.goal == null)
             this.goal = this.findTarget(cl);
 
         c = this.isTargeted(cl);
-        if (c != null){
+        if (c != null) {
             this.goAwayFrom(c, cl);
             return null;
         }
-        
+
         if (this.faim < 5 && !(this.goal instanceof DummyCreature)) {
             if (this.goal == null)
                 System.out.println("shit");
@@ -123,6 +128,20 @@ public class Lapin extends Animal {
                 System.out.println("shit");
             if (this.goTowards(this.goal, cl) && !(this.goal instanceof DummyCreature))
                 this.attack(this.goal);
+        }
+
+        if (this.reproductionCooldown <= 0) {
+            Iterator<Creature> cli = cl.listIterator();
+            cli = cl.listIterator();
+            while (cli.hasNext()) {
+                c = cli.next();
+                Creature nc = this.reproduceWith(c);
+                if (nc != null && cl.onOccupedSpace(nc)) {
+                    cl.append(nc);
+                    this.setReproductionCooldown(15);
+                    c.setReproductionCooldown(15);
+                }
+            }
         }
         return null;
     }
@@ -162,11 +181,7 @@ public class Lapin extends Animal {
     }
 
     @Override
-    public void showDNAChart() {
-    }
-
-    @Override
-    public void changeDNA() {        
+    public void changeDNA() {
         Hashtable<String, Component> t = new Hashtable<String, Component>();
         JSpinner fspin = new JSpinner(new SpinnerNumberModel(this.faim, 0, 100, 0.5));
         fspin.addChangeListener(new ChangeListener() {

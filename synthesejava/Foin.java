@@ -2,12 +2,20 @@ package synthesejava;
 
 import java.awt.Color;
 
+import java.awt.Component;
+
 import java.io.File;
 import java.io.IOException;
 
+import java.util.Hashtable;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Foin extends Vegetal {
     public Foin(int x, int y) {
@@ -113,10 +121,6 @@ public class Foin extends Vegetal {
         return reproduceWith(creature);
     }
 
-    @Override
-    public void showDNAChart() {
-    }
-
     public String update(CreatureList cl) {
         this.reproductionCooldown--;
         if (this.reproductionCooldown <= 0) {
@@ -125,8 +129,9 @@ public class Foin extends Vegetal {
             while (cli.hasNext()) {
                 Creature c = cli.next();
                 c = this.reproduceWith(c);
-                if (c != null)
+                if (c != null && !cl.onOccupedSpace(c)) {
                     cl.append(c);
+                }
             }
         }
         return null;
@@ -134,5 +139,27 @@ public class Foin extends Vegetal {
 
     @Override
     public void changeDNA() {
+        Hashtable<String, Component> t = new Hashtable<String, Component>();
+        JSpinner fspin = new JSpinner(new SpinnerNumberModel(this.faim, 0, 100, 0.5));
+        fspin.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSpinner mySpinner = (JSpinner)(e.getSource());
+                faim = Double.parseDouble(mySpinner.getValue().toString());
+            }
+        });
+        JSpinner healths = new JSpinner(new SpinnerNumberModel(this.health, 0, 100, 1));
+        healths.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSpinner mySpinner = (JSpinner)(e.getSource());
+                health = Integer.parseInt(mySpinner.getValue().toString());
+            }
+        });
+        t.put("faim!", fspin);
+        t.put("health", healths);
+        DNAChanger dc = new DNAChanger(t);
+        dc.setSize(600, 400);
+        dc.setVisible(true);
     }
 }

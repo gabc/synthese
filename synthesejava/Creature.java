@@ -54,8 +54,6 @@ public abstract class Creature {
 
     public abstract Creature interactWith(Creature creature);
 
-    public abstract void showDNAChart();
-
     public abstract boolean mightAttack(Creature creature);
     
     public abstract void changeDNA();
@@ -81,7 +79,6 @@ public abstract class Creature {
             return;
         if (!this.equals(c))
             if (!c.takeDommage(this.hitPower())) {
-                System.out.println("Ymange");
                 this.mange(c.getFaim());
                 this.goal = null;
             }
@@ -122,10 +119,6 @@ public abstract class Creature {
             if (this.getGoal() instanceof DummyCreature)
                 this.setGoal(null);
             return true;
-        } else {
-            ilast++;
-            if (ilast > 20)
-                System.out.println(c);
         }
 
         int px = 0;
@@ -149,7 +142,6 @@ public abstract class Creature {
 
         this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
         if (SyntheseFrame.onOccupedSpace(this, cl)) {
-            System.out.println("Samespace");
             this.taille = t;
             this.setGoal(this.findTarget(cl));
         }
@@ -200,7 +192,6 @@ public abstract class Creature {
 
         this.taille.move(getTaille().getX() + px, getTaille().getY() + py);
         if (SyntheseFrame.onOccupedSpace(this, cl)) {
-            System.out.println("Samespace");
             this.taille = t;
         }
     }
@@ -208,7 +199,6 @@ public abstract class Creature {
     public boolean isAlive() {
         boolean alivep = true;
         if (this.health <= 0) {
-            System.out.println("isded");
             alivep = false;
         }
         return alivep;
@@ -289,5 +279,9 @@ public abstract class Creature {
 
     BufferedImage getImage() {
         return this.img;
+    }
+    
+    void setReproductionCooldown(int n){
+        this.reproductionCooldown = n;
     }
 }

@@ -54,7 +54,7 @@ public class SyntheseFrame extends JFrame {
     private Ecouteur ec;
     private Canevas c;
     private MiniMap minimap;
-    private JButton jButton1 = new JButton();
+    private JButton pauseButton = new JButton();
     private JToggleButton ajoutLapin = new JToggleButton();
     private JToggleButton ajoutShit = new JToggleButton();
     private JToggleButton ajoutFoin = new JToggleButton();
@@ -87,10 +87,10 @@ public class SyntheseFrame extends JFrame {
         this.scrollpane =
                 new JScrollPane(this.c, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.scrollpane.setPreferredSize(this.drawArea);
-
+        this.map = new CreatureMap(SyntheseFrame.maxX, SyntheseFrame.maxY);
         this.minimap = new MiniMap(SyntheseFrame.maxX, SyntheseFrame.maxY);
-        jButton1.setText("go");
-        jButton1.addActionListener(ec);
+        pauseButton.setText("Lancer le jeu");
+        pauseButton.addActionListener(ec);
 
         ButtonGroup bg = new ButtonGroup();
         Box b = Box.createHorizontalBox();
@@ -100,7 +100,7 @@ public class SyntheseFrame extends JFrame {
         bg.add(ajoutLapin);
         b.add(ajoutLapin);
 
-        ajoutShit.setText("Shit");
+        ajoutShit.setText("Loup");
         ajoutShit.addActionListener(ec);
         bg.add(ajoutShit);
         b.add(ajoutShit);
@@ -115,14 +115,14 @@ public class SyntheseFrame extends JFrame {
         bg.add(clearAjout);
         b.add(clearAjout);
 
-        this.liste = new CreatureList();
+        this.liste = new CreatureList(this.map);
 
         this.getContentPane().add(b, BorderLayout.NORTH);
 
         this.add(this.scrollpane, BorderLayout.CENTER);
 
         JPanel botPan = new JPanel(new FlowLayout());
-        botPan.add(jButton1);
+        botPan.add(pauseButton);
         botPan.add(this.minimap);
 
         this.getContentPane().add(botPan, BorderLayout.SOUTH);
@@ -137,7 +137,6 @@ public class SyntheseFrame extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 int x = e.getX() / SyntheseFrame.this.c.getSizeRect();
                 int y = e.getY() / SyntheseFrame.this.c.getSizeRect();
-
                 if (SwingUtilities.isRightMouseButton(e)) {
                     Creature c = liste.getCreature(x, y);
                     liste.remove(c);
@@ -153,17 +152,14 @@ public class SyntheseFrame extends JFrame {
                 if (ajoutShit.isSelected()) {
                     c = new Loup(x, y);
                     SyntheseFrame.this.liste.append(c);
-                    map.insert(c, x, y);
                     return;
                 } else if (ajoutLapin.isSelected()) {
                     c = new Lapin(x, y);
                     SyntheseFrame.this.liste.append(c);
-                    map.insert(c, x, y);
                     return;
                 } else if (ajoutFoin.isSelected()) {
                     c = new Foin(x, y);
                     SyntheseFrame.this.liste.append(c);
-                    map.insert(c, x, y);
                     return;
                 }
 
@@ -186,6 +182,11 @@ public class SyntheseFrame extends JFrame {
         });
     }
 
+    /**
+     * En fait cette fonctionnalitee sert a rien.
+     * Mais bon, j'avais envie de la faire.
+     * Parce que je sais que Pierre-Paul va apprecier.
+     */
     public void clear() {
         JPanel contentPane = (JPanel)this.getContentPane();
 
@@ -197,7 +198,7 @@ public class SyntheseFrame extends JFrame {
                 try {
                     img = ImageIO.read(((new File("img/oops.png")).toURI()).toURL());
                 } catch (IOException e) {
-                    System.out.println("non");
+
                 }
                 g.drawImage(img, 0, 0, null);
             }
@@ -207,14 +208,7 @@ public class SyntheseFrame extends JFrame {
     }
 
     public static boolean onOccupedSpace(Creature c, CreatureList cl) {
-        Iterator<Creature> cli = cl.iterator();
-        while (cli.hasNext()) {
-            Creature c2 = cli.next();
-            if (c2.taille.getX() == c.taille.getX() && c2.taille.getY() == c.taille.getY() && !c.equals(c2)) {
-                return true;
-            }
-        }
-        return false;
+        return cl.onOccupedSpace(c);
     }
 
     private Creature canFindToAttack(Creature c, CreatureList lst) {
@@ -247,7 +241,7 @@ public class SyntheseFrame extends JFrame {
         liste.update();
         this.c.invalidate();
         this.c.repaint(liste);
-        this.minimap.repaint(liste, scrollpane.getViewport().getBounds());
+        this.minimap.repaint(liste, c.getVisibleRect());
         this.scrollpane.repaint();
         tick++;
     }
@@ -255,7 +249,7 @@ public class SyntheseFrame extends JFrame {
 
     protected class Ecouteur implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == jButton1) {
+            if (e.getSource() == pauseButton) {
                 if (!runningState) {
                     playThread.interrupt();
                 } else {
@@ -278,8 +272,11 @@ public class SyntheseFrame extends JFrame {
                 try {
                     Thread.currentThread().sleep(400);
                 } catch (InterruptedException e) {
-                    System.out.println("playThread interupt");
                     state = !state;
+                    if (state)
+                        pauseButton.setText("Pauser le jeu");
+                    else
+                        pauseButton.setText("Relancer le jeu");
                 }
 
                 if (state)
